@@ -33,6 +33,7 @@
   "dependencies": {
     "@verdaccio/commons-api": "^8.0.0",
     "@verdaccio/streams": "^8.0.0",
+    "get-stream": "^5.1.0",
     "minio": "^7.0.12"
   },
   "devDependencies": {

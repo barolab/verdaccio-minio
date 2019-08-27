@@ -1,6 +1,6 @@
-import { Config } from '@verdaccio/types';
+import { Config as VerdaccioConfig } from '@verdaccio/types';
 
-export interface MinioConfig extends Config {
+export interface ClientConfig {
   endPoint: string;
   accessKey: string;
   secretKey: string;
@@ -9,3 +9,5 @@ export interface MinioConfig extends Config {
   region?: string;
   useSSL?: boolean;
 }
+
+export interface PluginConfig extends ClientConfig, VerdaccioConfig {}
