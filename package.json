@@ -32,12 +32,14 @@
   },
   "dependencies": {
     "@verdaccio/commons-api": "^8.0.0",
-    "@verdaccio/streams": "^8.0.0"
+    "@verdaccio/streams": "^8.0.0",
+    "minio": "^7.0.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
     "@babel/preset-typescript": "^7.3.0",
+    "@types/minio": "^7.0.2",
     "@types/node": "^12.7.2",
     "@verdaccio/eslint-config": "^8.0.0",
     "@verdaccio/types": "^8.0.0",
