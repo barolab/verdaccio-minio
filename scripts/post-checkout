@@ -1,0 +1,18 @@
+#!/bin/bash
+
+RED=$(tput -Txterm setaf 1)
+NORMAL="$(tput sgr0)"
+
+PREV_COMMIT=$1
+POST_COMMIT=$2
+
+if [[ '0000000000000000000000000000000000000000' == "$PREV_COMMIT" ]]; then exit 0; fi
+
+check() {
+  DIFF=$(git diff --shortstat "$PREV_COMMIT..$POST_COMMIT" ${1})
+  if [[ $DIFF != "" ]]; then
+    echo -e "$RED ${1} has changed. You must run yarn install$NORMAL"
+  fi
+}
+
+for f in $(find . -not -path "*node_modules*" -name 'package.json' -or -not -path "*node_modules*" -name 'yarn.lock'); do check $f; done

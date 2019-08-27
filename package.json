@@ -1,0 +1,48 @@
+{
+  "name": "verdaccio-minio",
+  "version": "0.1.0",
+  "description": "A verdaccio plugin for storing data in Minio",
+  "main": "lib/index.js",
+  "homepage": "https://github.com/barolab/verdaccio-minio#readme",
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "Verdaccio",
+    "S3",
+    "Minio"
+  ],
+  "author": {
+    "name": "Romain Bailly",
+    "email": "rbailly17000@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barolab/verdaccio-minio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/barolab/verdaccio-minio/issues"
+  },
+  "scripts": {
+    "postinstall": "bash ./scripts/post-install",
+    "lint": "eslint \"**/*.{js,ts}\"",
+    "test": "jest",
+    "fmt": "prettier -- --write ./**/*.{js,ts,json}",
+    "build": "yarn build:types && yarn build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\""
+  },
+  "dependencies": {
+    "@verdaccio/commons-api": "^8.0.0",
+    "@verdaccio/streams": "^8.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.0",
+    "@types/node": "^12.7.2",
+    "@verdaccio/eslint-config": "^8.0.0",
+    "@verdaccio/types": "^8.0.0",
+    "eslint": "^6.2.2",
+    "prettier": "^1.18.2",
+    "typescript": "^3.5.3"
+  }
+}

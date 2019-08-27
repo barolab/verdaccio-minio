@@ -1,0 +1,53 @@
+#!/bin/bash
+
+RED=$(tput -Txterm setaf 1)
+GREEN=$(tput -Txterm setaf 2)
+UNDERLINE="$(tput smul)"
+NORMAL="$(tput sgr0)"
+BOLD="$(tput bold)"
+STATUS=0
+
+title() {
+  echo "${UNDERLINE}${BOLD}${1}${NORMAL}"
+}
+
+success() {
+  echo "${GREEN}✓${NORMAL} ${1}"
+}
+
+error() {
+  echo "${RED}✗${NORMAL} $1"
+  STATUS=1
+}
+
+panic() {
+  printf "\n\n\t%s\n\n" "$1"
+  exit 1
+}
+
+NAME=$(git branch | sed 's/* //')
+if [ "$NAME" != '(no branch)' ]; then
+  title "Format"
+  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.(ts|json|md)$'); do
+    {
+      ./node_modules/prettier/bin-prettier.js --write --loglevel silent "${file}" && git add "${file}" && success "$file"
+    } || {
+      error "$file"
+    }
+  done
+  echo
+
+  title "Lint"
+  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.ts$'); do
+    {
+      ./node_modules/eslint/bin/eslint.js "${file}" && success "$file"
+    } || {
+      error "$file"
+    }
+  done
+  echo
+fi
+
+if [ $STATUS -ne 0 ]; then
+  panic "Hook ${BOLD}${RED}failed${NORMAL}, please check your code."
+fi
