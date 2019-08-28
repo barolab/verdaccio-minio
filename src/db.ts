@@ -145,6 +145,7 @@ export default class Database {
       this.debug({ str }, 'Minio: Got database from remote, @{str}');
       db = str === '' ? { list: [], secret: '' } : JSON.parse(str);
     } catch (error) {
+      this.debug({ error }, 'Minio: Failed to load database from remote storage, @{error}');
       throw new Error(`Minio: Failed to load database from remote storage, ${error}`);
     }
 
@@ -163,6 +164,7 @@ export default class Database {
       this.debug({ res }, 'Minio: Database stored successfully, @{res}');
       this.cached = db;
     } catch (error) {
+      this.debug({ error }, 'Minio: Failed to store database to remote storage, @{error}');
       throw new Error(`Minio: Failed to store database to remote storage, ${error}`);
     }
   }

@@ -59,6 +59,7 @@ export default class Tokens {
       this.debug({ str }, 'Minio: Got tokens from remote, @{str}');
       db = str === '' ? { tokens: {} } : JSON.parse(str);
     } catch (error) {
+      this.debug({ error }, 'Minio: Failed to load tokens from remote storage, @{error}');
       throw new Error(`Minio: Failed to load tokens from remote storage, ${error}`);
     }
 
@@ -77,6 +78,7 @@ export default class Tokens {
       this.debug({ res }, 'Minio: tokens stored successfully, @{res}');
       this.cached = db;
     } catch (error) {
+      this.debug({ error }, 'Minio: Failed to store tokens to remote storage, @{error}');
       throw new Error(`Minio: Failed to store tokens to remote storage, ${error}`);
     }
   }

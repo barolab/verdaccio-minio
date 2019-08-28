@@ -64,6 +64,7 @@ export default class Client {
         this.debug({}, 'Minio: Bucket @{bucket} already exist, keep going');
       }
     } catch (error) {
+      this.debug({ error }, 'Minio: Failed to ensure bucket @{bucket} exist, @{error}');
       throw new Error(`Failed to ensure bucket ${this.bucket} exist: ${error}`);
     }
   }
