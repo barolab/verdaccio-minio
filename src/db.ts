@@ -94,7 +94,7 @@ export default class Database {
     try {
       this.debug({ name }, '[Minio] Adding package @{name}');
       const state = await this.load();
-      if (state.list.indexOf(name) >= -1) {
+      if (state.list.indexOf(name) > -1) {
         this.debug({ name }, '[Minio] Package @{name} already exist');
         return;
       }
