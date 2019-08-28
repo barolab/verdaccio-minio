@@ -1,4 +1,5 @@
 import { Logger, Token, TokenFilter } from '@verdaccio/types';
+import { isNotFound } from './errors';
 import Client from './client';
 
 const FILE_NAME = 'tokens.json';
@@ -78,8 +79,13 @@ export default class Tokens {
       this.debug({ res }, '[Minio] tokens stored successfully, @{res}');
       this.cached = db;
     } catch (error) {
-      this.debug({ error }, '[Minio] Failed to store tokens to remote storage, @{error}');
-      throw new Error(`[Minio] Failed to store tokens to remote storage, ${error}`);
+      if (isNotFound(error)) {
+        this.debug({}, '[Minio] tokens does not exist yet in storage, initializing it');
+        db = { tokens: {} };
+      } else {
+        this.debug({ error }, '[Minio] Failed to load tokens from remote storage, @{error}');
+        throw new Error(`[Minio] Failed to load tokens from remote storage, ${error}`);
+      }
     }
   }
 

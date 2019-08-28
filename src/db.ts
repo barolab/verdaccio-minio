@@ -1,4 +1,5 @@
 import { LocalStorage, Logger } from '@verdaccio/types';
+import { isNotFound } from './errors';
 import Client from './client';
 
 const FILE_NAME = 'db.json';
@@ -145,8 +146,13 @@ export default class Database {
       this.debug({ str }, '[Minio] Got database from remote, @{str}');
       db = str === '' ? { list: [], secret: '' } : JSON.parse(str);
     } catch (error) {
-      this.debug({ error }, '[Minio] Failed to load database from remote storage, @{error}');
-      throw new Error(`[Minio] Failed to load database from remote storage, ${error}`);
+      if (isNotFound(error)) {
+        this.debug({}, '[Minio] Database does not exist yet in storage, initializing it');
+        db = { list: [], secret: '' };
+      } else {
+        this.debug({ error }, '[Minio] Failed to load database from remote storage, @{error}');
+        throw new Error(`[Minio] Failed to load database from remote storage, ${error}`);
+      }
     }
 
     return db;
