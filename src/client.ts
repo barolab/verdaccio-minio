@@ -73,10 +73,6 @@ export default class Client {
     return str(await this.client.getObject(this.bucket, name));
   }
 
-  public async getBuffer(name: string): Promise<Buffer> {
-    return buffer(await this.client.getObject(this.bucket, name));
-  }
-
   public async getStream(name: string): Promise<Stream> {
     return await this.client.getObject(this.bucket, name);
   }
