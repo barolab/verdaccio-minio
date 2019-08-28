@@ -23,6 +23,7 @@
   },
   "scripts": {
     "postinstall": "bash ./scripts/post-install",
+    "example": "bash ./scripts/example",
     "lint": "eslint \"**/*.{js,ts}\"",
     "test": "jest",
     "fmt": "prettier -- --write ./**/*.{js,ts,json}",
@@ -39,9 +40,9 @@
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
-    "@babel/preset-typescript": "^7.3.0",
     "@types/minio": "^7.0.2",
     "@types/node": "^12.7.2",
+    "@verdaccio/babel-preset": "^8.0.0",
     "@verdaccio/eslint-config": "^8.0.0",
     "@verdaccio/types": "^8.0.0",
     "eslint": "^6.2.2",
