@@ -3,6 +3,7 @@ import { Stream } from 'stream';
 import { Logger } from '@verdaccio/types';
 import { Client as MinioClient } from 'minio';
 import { ClientConfig } from './config';
+import { PackageStat } from './stat';
 
 const DEFAULT_BUCKET = 'verdaccio';
 const DEFAULT_REGION = 'us-east-1';
@@ -74,6 +75,20 @@ export default class Client {
 
   public async getStream(name: string): Promise<Stream> {
     return await this.client.getObject(this.bucket, name);
+  }
+
+  public async stat(name: string): Promise<PackageStat> {
+    const data = await this.client.statObject(this.bucket, name);
+    this.logger.debug({ name, data }, 'Minio: Got stat for package @{name}, @{data}');
+
+    return {
+      name: name,
+      path: name,
+      size: data.size,
+      etag: data.etag,
+      time: data.lastModified.getTime(),
+      metaData: data.metaData,
+    };
   }
 
   public async put(name: string, data: Buffer | Stream | string): Promise<string> {

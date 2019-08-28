@@ -1,4 +1,13 @@
-import { Logger, Config, Token, TokenFilter, PluginOptions, IPackageStorage, IPluginStorage } from '@verdaccio/types';
+import {
+  Logger,
+  Config,
+  Callback,
+  Token,
+  TokenFilter,
+  PluginOptions,
+  IPackageStorage,
+  IPluginStorage,
+} from '@verdaccio/types';
 import { PluginConfig } from './config';
 import Database from './db';
 import Tokens from './tokens';
@@ -29,8 +38,17 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     });
   }
 
-  public search(onPackage: Function, onEnd: Function, validate: Function): void {
-    throw new Error('Method not implemented.');
+  public search(onPackage: Callback, onEnd: Callback, validate: (name: string) => boolean): void {
+    this.db
+      .search(validate)
+      .then(results => Promise.all(results.map(r => this.stat(r, onPackage))))
+      .then(() => onEnd(null))
+      .catch(error => onEnd(error));
+  }
+
+  private async stat(name: string, onPackage: Callback): Promise<void> {
+    const stat = await this.client.stat(name);
+    onPackage(stat);
   }
 
   public get(callback: Function): void {

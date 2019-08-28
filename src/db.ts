@@ -1,4 +1,5 @@
 import { LocalStorage, Logger } from '@verdaccio/types';
+import { PackageStat } from './stat';
 import Client from './client';
 
 const FILE_NAME = 'db.json';
@@ -40,6 +41,17 @@ export default class Database {
     const next = { ...state, secret: secret };
 
     await this.save(next);
+  }
+
+  /**
+   * Search for packages based on the validation function
+   *
+   * @param validate
+   */
+  public async search(validate: (name: string) => boolean): Promise<string[]> {
+    const state = await this.load();
+
+    return state.list.filter(validate);
   }
 
   /**
