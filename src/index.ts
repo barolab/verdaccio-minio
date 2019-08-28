@@ -8,8 +8,10 @@ import {
   IPackageStorage,
   IPluginStorage,
 } from '@verdaccio/types';
+
 import { PluginConfig } from './config';
 import Database from './db';
+import Storage from './storage';
 import Tokens from './tokens';
 import Client from './client';
 
@@ -92,7 +94,7 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     return this.tokens.remove(user, key);
   }
 
-  public getPackageStorage(info: string): IPackageStorage {
-    throw new Error('Method not implemented.');
+  public getPackageStorage(name: string): IPackageStorage {
+    return new Storage(this.client, this.logger, name);
   }
 }

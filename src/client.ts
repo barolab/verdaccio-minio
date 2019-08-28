@@ -95,6 +95,10 @@ export default class Client {
     return await this.client.putObject(this.bucket, name, data);
   }
 
+  public async remove(name: string): Promise<void> {
+    return await this.client.removeObject(this.bucket, name);
+  }
+
   private debug(conf: any, template: string): void {
     this.logger.debug(
       {

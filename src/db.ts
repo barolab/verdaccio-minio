@@ -1,5 +1,4 @@
 import { LocalStorage, Logger } from '@verdaccio/types';
-import { PackageStat } from './stat';
 import Client from './client';
 
 const FILE_NAME = 'db.json';
