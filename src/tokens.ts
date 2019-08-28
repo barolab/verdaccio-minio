@@ -53,14 +53,14 @@ export default class Tokens {
 
     let db: TokenStorage;
     try {
-      this.debug({}, 'Minio: Loading tokens in cache');
+      this.debug({}, '[Minio] Loading tokens in cache');
       const str = await this.client.get(FILE_NAME);
 
-      this.debug({ str }, 'Minio: Got tokens from remote, @{str}');
+      this.debug({ str }, '[Minio] Got tokens from remote, @{str}');
       db = str === '' ? { tokens: {} } : JSON.parse(str);
     } catch (error) {
-      this.debug({ error }, 'Minio: Failed to load tokens from remote storage, @{error}');
-      throw new Error(`Minio: Failed to load tokens from remote storage, ${error}`);
+      this.debug({ error }, '[Minio] Failed to load tokens from remote storage, @{error}');
+      throw new Error(`[Minio] Failed to load tokens from remote storage, ${error}`);
     }
 
     return db;
@@ -73,13 +73,13 @@ export default class Tokens {
    */
   private async save(db: TokenStorage): Promise<void> {
     try {
-      this.debug({}, 'Minio: Saving cached tokens to storage');
+      this.debug({}, '[Minio] Saving cached tokens to storage');
       const res = await this.client.put(FILE_NAME, JSON.stringify(db));
-      this.debug({ res }, 'Minio: tokens stored successfully, @{res}');
+      this.debug({ res }, '[Minio] tokens stored successfully, @{res}');
       this.cached = db;
     } catch (error) {
-      this.debug({ error }, 'Minio: Failed to store tokens to remote storage, @{error}');
-      throw new Error(`Minio: Failed to store tokens to remote storage, ${error}`);
+      this.debug({ error }, '[Minio] Failed to store tokens to remote storage, @{error}');
+      throw new Error(`[Minio] Failed to store tokens to remote storage, ${error}`);
     }
   }
 

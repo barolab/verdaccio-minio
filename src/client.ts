@@ -37,7 +37,7 @@ export default class Client {
     this.bucket = config.bucket ? config.bucket : DEFAULT_BUCKET;
     this.region = config.region ? config.region : DEFAULT_REGION;
 
-    logger.debug({ config }, 'Minio: Initializing client with @{config}');
+    logger.debug({ config }, '[Minio] Initializing client with @{config}');
 
     this.logger = logger;
     this.client = new MinioClient({
@@ -57,14 +57,14 @@ export default class Client {
     try {
       const exist = await this.client.bucketExists(this.bucket);
       if (!exist) {
-        this.debug({}, 'Minio: Bucket @{bucket} does not exist, creating it');
+        this.debug({}, '[Minio] Bucket @{bucket} does not exist, creating it');
         await this.client.makeBucket(this.bucket, this.region);
-        this.debug({}, 'Minio: Bucket @{bucket} creating successfully');
+        this.debug({}, '[Minio] Bucket @{bucket} creating successfully');
       } else {
-        this.debug({}, 'Minio: Bucket @{bucket} already exist, keep going');
+        this.debug({}, '[Minio] Bucket @{bucket} already exist, keep going');
       }
     } catch (error) {
-      this.debug({ error }, 'Minio: Failed to ensure bucket @{bucket} exist, @{error}');
+      this.debug({ error }, '[Minio] Failed to ensure bucket @{bucket} exist, @{error}');
       throw new Error(`Failed to ensure bucket ${this.bucket} exist: ${error}`);
     }
   }
@@ -83,7 +83,7 @@ export default class Client {
 
   public async stat(name: string): Promise<PackageStat> {
     const data = await this.client.statObject(this.bucket, name);
-    this.logger.debug({ name, data }, 'Minio: Got stat for package @{name}, @{data}');
+    this.logger.debug({ name, data }, '[Minio] Got stat for package @{name}, @{data}');
 
     return {
       name: name,
