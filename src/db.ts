@@ -25,9 +25,14 @@ export default class Database {
    * Get the secret from the database
    */
   public async getSecret(): Promise<string> {
-    const state = await this.load();
-
-    return state.secret;
+    try {
+      this.debug({}, 'Minio: Loading current secret');
+      const state = await this.load();
+      this.debug({}, 'Minio: Secret loaded successfully');
+      return state.secret;
+    } catch (error) {
+      throw new Error(`Minio: Failed to load the secret, ${error}`);
+    }
   }
 
   /**
@@ -36,10 +41,15 @@ export default class Database {
    * @param secret
    */
   public async setSecret(secret: string): Promise<void> {
-    const state = await this.load();
-    const next = { ...state, secret: secret };
-
-    await this.save(next);
+    try {
+      this.debug({}, 'Minio: Saving a new secret');
+      const state = await this.load();
+      const next = { ...state, secret: secret };
+      await this.save(next);
+      this.debug({}, 'Minio: Saved a new secret');
+    } catch (error) {
+      throw new Error(`Minio: Failed to save a new secret, ${error}`);
+    }
   }
 
   /**
@@ -48,18 +58,30 @@ export default class Database {
    * @param validate
    */
   public async search(validate: (name: string) => boolean): Promise<string[]> {
-    const state = await this.load();
-
-    return state.list.filter(validate);
+    try {
+      this.debug({}, 'Minio: Searching for some packages');
+      const state = await this.load();
+      const result = state.list.filter(validate);
+      this.debug({ result }, 'Minio: Got some packages that match the filter, @{result}');
+      return result;
+    } catch (error) {
+      throw new Error(`Minio: Failed to search for packages, ${error}`);
+    }
   }
 
   /**
    * Get all the packages in the database
    */
   public async get(): Promise<any> {
-    const state = await this.load();
-
-    return state.list;
+    try {
+      this.debug({}, 'Minio: Loading all the packages');
+      const state = await this.load();
+      const result = state.list;
+      this.debug({ result }, 'Minio: Got all the packages, @{result}');
+      return result;
+    } catch (error) {
+      throw new Error(`Minio: Failed to load all the packages, ${error}`);
+    }
   }
 
   /**
@@ -68,14 +90,20 @@ export default class Database {
    * @param name
    */
   public async add(name: string): Promise<void> {
-    const state = await this.load();
-    if (state.list.indexOf(name) >= -1) {
-      this.debug({ name }, 'Minio: Package @{name} already exist in database');
-      return;
-    }
+    try {
+      this.debug({ name }, 'Minio: Adding package @{name}');
+      const state = await this.load();
+      if (state.list.indexOf(name) >= -1) {
+        this.debug({ name }, 'Minio: Package @{name} already exist');
+        return;
+      }
 
-    const next = { ...state, list: [...state.list, name] };
-    await this.save(next);
+      const next = { ...state, list: [...state.list, name] };
+      await this.save(next);
+      this.debug({ name }, 'Minio: Package @{name} successfully added');
+    } catch (error) {
+      throw new Error(`Minio: Failed to add package, ${error}`);
+    }
   }
 
   /**
@@ -84,14 +112,20 @@ export default class Database {
    * @param name
    */
   public async remove(name: string): Promise<void> {
-    const state = await this.load();
-    if (state.list.indexOf(name) === -1) {
-      this.debug({ name }, 'Minio: Package @{name} does not exist in database, cannot remove it');
-      return;
-    }
+    try {
+      this.debug({ name }, 'Minio: Removing package @{name}');
+      const state = await this.load();
+      if (state.list.indexOf(name) === -1) {
+        this.debug({ name }, 'Minio: Package @{name} does not exist, cannot remove it');
+        return;
+      }
 
-    const next = { ...state, list: state.list.filer(p => p !== name) };
-    await this.save(next);
+      const next = { ...state, list: state.list.filer(p => p !== name) };
+      await this.save(next);
+      this.debug({ name }, 'Minio: Package @{name} successfully removed');
+    } catch (error) {
+      throw new Error(`Minio: Failed to remove package, ${error}`);
+    }
   }
 
   /**
@@ -105,7 +139,7 @@ export default class Database {
 
     let db: LocalStorage;
     try {
-      this.debug({}, 'Minio: Loading database in cache');
+      this.debug({ name: FILE_NAME }, 'Minio: Loading database @{name} from cache');
       const str = await this.client.get(FILE_NAME);
 
       this.debug({ str }, 'Minio: Got database from remote, @{str}');
