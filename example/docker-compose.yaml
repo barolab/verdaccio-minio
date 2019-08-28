@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  verdaccio:
+    build: .
+    ports:
+      - 4873:4873
+    depends_on:
+      - minio
+
+  minio:
+    image: minio/minio:RELEASE.2019-08-21T19-40-07Z
+    command: server /data
+    volumes:
+      - minio:/data
+    ports:
+      - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: this-is-not-so-secret
+      MINIO_SECRET_KEY: this-is-not-so-secret
+
+volumes:
+  minio:

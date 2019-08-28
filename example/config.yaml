@@ -1,0 +1,65 @@
+#
+# This is the config file used for the docker images.
+# It allows all users to do anything, so don't use it on production systems.
+#
+# Do not configure host and port under `listen` in this file
+# as it will be ignored when using docker.
+# see https://verdaccio.org/docs/en/docker#docker-and-custom-port-configuration
+#
+# Look here for more config file examples:
+# https://github.com/verdaccio/verdaccio/tree/master/conf
+#
+
+storage: /verdaccio/storage/data
+plugins: /verdaccio/plugins
+
+web:
+  title: Verdaccio
+
+auth:
+  htpasswd:
+    file: /verdaccio/storage/htpasswd
+
+security:
+  api:
+    jwt:
+      sign:
+        expiresIn: 60d
+        notBefore: 1
+  web:
+    sign:
+      expiresIn: 7d
+      notBefore: 1
+
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+
+packages:
+  '@*/*':
+    access: $all
+    publish: $authenticated
+    unpublish: $authenticated
+    proxy: npmjs
+
+  '**':
+    access: $all
+    publish: $authenticated
+    unpublish: $authenticated
+    proxy: npmjs
+
+middlewares:
+  audit:
+    enabled: true
+
+logs:
+  - { type: stdout, format: pretty, level: debug }
+
+store:
+  minio-storage:
+    port: 9000
+    region: us-east-1
+    endPoint: minio
+    accessKey: this-is-not-so-secret
+    secretKey: this-is-not-so-secret
+    useSSL: false

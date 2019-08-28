@@ -36,6 +36,9 @@ export default class Client {
 
     this.bucket = config.bucket ? config.bucket : DEFAULT_BUCKET;
     this.region = config.region ? config.region : DEFAULT_REGION;
+
+    logger.debug({ config }, 'Minio: Initializing client with @{config}');
+
     this.logger = logger;
     this.client = new MinioClient({
       port: config.port || 443,
@@ -43,7 +46,7 @@ export default class Client {
       endPoint: config.endPoint,
       accessKey: config.accessKey,
       secretKey: config.secretKey,
-      useSSL: config.useSSL || true,
+      useSSL: config.useSSL,
     });
   }
 
