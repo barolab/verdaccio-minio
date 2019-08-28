@@ -62,7 +62,7 @@ export default class Tokens {
       throw new Error(`Minio: Failed to load tokens from remote storage, ${error}`);
     }
 
-    return Promise.resolve(db);
+    return db;
   }
 
   /**

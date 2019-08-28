@@ -148,7 +148,7 @@ export default class Database {
       throw new Error(`Minio: Failed to load database from remote storage, ${error}`);
     }
 
-    return Promise.resolve(db);
+    return db;
   }
 
   /**
