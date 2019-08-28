@@ -1,6 +1,7 @@
 import { Logger, Config, Token, TokenFilter, PluginOptions, IPackageStorage, IPluginStorage } from '@verdaccio/types';
 import { PluginConfig } from './config';
 import Database from './db';
+import Tokens from './tokens';
 import Client from './client';
 
 export default class MinioDatabase implements IPluginStorage<PluginConfig> {
@@ -9,6 +10,7 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
   public config: PluginConfig;
 
   private client: Client;
+  private tokens: Tokens;
   private db: Database;
 
   public constructor(config: Config, options: PluginOptions<PluginConfig>) {
@@ -19,6 +21,7 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     this.logger = options.logger;
     this.config = { ...config.store['minio-storage'] };
     this.client = new Client(this.config, this.logger);
+    this.tokens = new Tokens(this.client, this.logger);
     this.db = new Database(this.client, this.logger);
 
     this.client.initialize().catch(error => {
@@ -60,15 +63,15 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
   }
 
   public readTokens(filter: TokenFilter): Promise<Token[]> {
-    throw new Error('Method not implemented.');
+    return this.tokens.get(filter);
   }
 
   public saveToken(token: Token): Promise<any> {
-    throw new Error('Method not implemented.');
+    return this.tokens.add(token);
   }
 
   public deleteToken(user: string, key: string): Promise<any> {
-    throw new Error('Method not implemented.');
+    return this.tokens.remove(user, key);
   }
 
   public getPackageStorage(info: string): IPackageStorage {
