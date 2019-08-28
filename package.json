@@ -2,7 +2,6 @@
   "name": "verdaccio-minio",
   "version": "0.1.0",
   "description": "A verdaccio plugin for storing data in Minio",
-  "main": "lib/index.js",
   "homepage": "https://github.com/barolab/verdaccio-minio#readme",
   "license": "SEE LICENSE IN LICENSE",
   "keywords": [
@@ -20,6 +19,14 @@
   },
   "bugs": {
     "url": "https://github.com/barolab/verdaccio-minio/issues"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "engines": {
+    "node": ">=8"
   },
   "scripts": {
     "postinstall": "bash ./scripts/post-install",
