@@ -36,9 +36,6 @@ export default class Client {
 
     this.bucket = config.bucket ? config.bucket : DEFAULT_BUCKET;
     this.region = config.region ? config.region : DEFAULT_REGION;
-
-    logger.debug({ config }, '[Minio] Initializing client with @{config}');
-
     this.logger = logger;
     this.client = new MinioClient({
       port: config.port || 443,
@@ -70,7 +67,7 @@ export default class Client {
   }
 
   public async get(name: string): Promise<string> {
-    return str(await this.client.getObject(this.bucket, name));
+    return str(await this.getStream(name));
   }
 
   public async getStream(name: string): Promise<Stream> {
