@@ -13,5 +13,8 @@ RUN cd /usr/local/lib/node_modules/verdaccio-minio-storage && \
 # Copy config with minio storage defined
 COPY config.yaml /verdaccio/conf
 
+# Copy user credentials (admin/admin)
+COPY htpasswd /verdaccio/storage/htpasswd
+
 # Reset user to the default one
 USER verdaccio

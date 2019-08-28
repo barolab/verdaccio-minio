@@ -7,6 +7,9 @@ services:
       - 4873:4873
     depends_on:
       - minio
+    environment:
+      VERDACCIO_PROTOCOL: http
+      VERDACCIO_PORT: 4873
 
   minio:
     image: minio/minio:RELEASE.2019-08-21T19-40-07Z
