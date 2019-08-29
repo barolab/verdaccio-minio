@@ -32,9 +32,9 @@
     "postinstall": "bash ./scripts/post-install",
     "accept": "bash ./scripts/accept",
     "start": "bash ./scripts/start",
-    "lint": "eslint \"**/*.{js,ts}\"",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
     "test": "jest",
-    "fmt": "prettier -- --write ./**/*.{js,ts,json}",
+    "fmt": "prettier -- --write ./src/**/*.{js,ts,json}",
     "build": "yarn build:types && yarn build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\""
