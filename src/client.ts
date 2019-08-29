@@ -74,9 +74,21 @@ export default class Client {
     return await this.client.getObject(this.bucket, name);
   }
 
+  public async exist(name: string): Promise<boolean> {
+    try {
+      this.logger.debug({ name }, '[Minio] Checking if object @{name} exists');
+      const stat = await this.stat(name);
+      this.logger.debug({ name, time: stat.time }, '[Minio] Object @{name} exist, since @{time}');
+      return true;
+    } catch (error) {
+      this.logger.debug({ name, error }, '[Minio] Object @{name} does not exist: @{error}');
+      return false;
+    }
+  }
+
   public async stat(name: string): Promise<PackageStat> {
     const data = await this.client.statObject(this.bucket, name);
-    this.logger.debug({ name, data }, '[Minio] Got stat for package @{name}, @{data}');
+    this.logger.debug({ name, data }, '[Minio] Got stat for object @{name}, @{data}');
 
     return {
       name: name,
