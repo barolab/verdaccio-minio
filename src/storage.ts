@@ -1,8 +1,8 @@
 import { Logger, Package, IReadTarball, IUploadTarball, ILocalPackageManager } from '@verdaccio/types';
 import { getConflict } from '@verdaccio/commons-api';
-import { wrap, isNotFound } from './errors';
 
-import TarballStream from './tarball';
+import { ReadStream, WriteStream } from './tarball';
+import { wrap, isNotFound } from './errors';
 import Client from './client';
 
 const PKG_FILE_NAME = 'package.json';
@@ -21,19 +21,49 @@ export default class Storage implements ILocalPackageManager {
 
   writeTarball(name: string): IUploadTarball {
     const key = `${this.name}/${name}`;
-    const tbs = new TarballStream(this.logger, `UploadTarball<${key}>`, {});
-    this.client.put(key, tbs).catch(error => tbs.emit('error', error));
+    const tbs = new WriteStream(this.logger, key, {});
+    this.debug({ key }, '[Minio] Writing tarball at @{key}');
+    this.client.exist(key).then(exist => {
+      if (exist) {
+        return tbs.emit('error', getConflict());
+      }
+
+      this.uploadTarball(key, tbs);
+      tbs.emit('open');
+    });
 
     return tbs;
   }
 
+  uploadTarball(key: string, stream: WriteStream): void {
+    this.client
+      .put(key, stream)
+      .then(etag => {
+        this.debug({ key, etag }, '[Minio] Tarball at @{key} as been uploaded successfully');
+        stream.emit('success');
+      })
+      .catch(error => {
+        this.debug({ key, error }, '[Minio] Received error when writing tarball at @{key}: @{error}');
+        stream.emit('error', wrap(error));
+      });
+  }
+
   readTarball(name: string): IReadTarball {
     const key = `${this.name}/${name}`;
-    const tbs = new TarballStream(this.logger, `ReadTarball<${key}>`, {});
-    this.client
-      .getStream(key)
-      .then(stream => stream.pipe(tbs))
-      .catch(error => tbs.emit('error', error));
+    const tbs = new ReadStream(this.logger, key, {});
+    this.debug({ key }, '[Minio] Reading tarball at @{key}');
+    Promise.all([this.client.getStream(key), this.client.stat(key)])
+      .then(([stream, stat]) => {
+        this.debug({ key }, '[Minio] Opening stream for reading tarball at @{key}');
+        stream.pipe(tbs);
+        stream.on('error', error => tbs.emit('error', wrap(error)));
+        tbs.emit('content-length', stat.size);
+        tbs.emit('open');
+      })
+      .catch(error => {
+        this.debug({ key, error }, '[Minio] Received error when reading tarball at @{key}: @{error}');
+        tbs.emit('error', wrap(error));
+      });
 
     return tbs;
   }
