@@ -8,6 +8,8 @@ export interface ClientConfig {
   bucket?: string;
   region?: string;
   useSSL?: boolean;
+  delay?: number;
+  retries?: number;
 }
 
 export interface PluginConfig extends ClientConfig, VerdaccioConfig {}
