@@ -1,0 +1,101 @@
+#!/bin/bash
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+PWD=$(pwd)
+RED=$(tput -Txterm setaf 1)
+GREEN=$(tput -Txterm setaf 2)
+UNDERLINE="$(tput smul)"
+NORMAL="$(tput sgr0)"
+BOLD="$(tput bold)"
+
+MINIO_SERVICE=minio
+MINIO_ENDPOINT=http://127.0.0.1:9000
+MINIO_ACCESS_KEY=this-is-not-so-secret
+MINIO_SECRET_KEY=this-is-not-so-secret
+VERDACCIO_SERVICE=verdaccio
+VERDACCIO_ENDPOINT=http://127.0.0.1:4873
+
+root() {
+  cd "$DIR/.."
+}
+
+example() {
+  cd "$DIR/../example"
+}
+
+title() {
+  echo "${UNDERLINE}${BOLD}${1}${NORMAL}"
+}
+
+success() {
+  echo "${GREEN}✓${NORMAL} ${1}"
+}
+
+error() {
+  echo "${RED}✗${NORMAL} $1"
+}
+
+panic() {
+  printf "\n\n\t%s\n\n" "${RED}$1${NORMAL}"
+  exit 1
+}
+
+isContainerRunning() {
+  if [ -z $(docker-compose ps -q $1) ] || [ -z $(docker ps -q --no-trunc | grep $(docker-compose ps -q $1)) ]; then
+    panic "$1 is not running."
+  else
+    success "$1 is running."
+  fi
+}
+
+cleanup() {
+  example
+  docker-compose logs $VERDACCIO_SERVICE >"$DIR/../example/out.verdaccio.log"
+  mc ls example/verdaccio >"$DIR/../example/out.minio.log"
+  mc config host rm example
+  prune
+  root
+}
+
+build() {
+  title "Building plugin"
+  {
+    root
+    yarn build
+  } || {
+    panic "Failed to build plugin"
+  }
+}
+
+copy() {
+  title "Copying build result to example folder"
+  {
+    root
+    mkdir -p ./example/verdaccio-minio-storage
+    cp package.json ./example/verdaccio-minio-storage
+    cp yarn.lock ./example/verdaccio-minio-storage
+    cp -R lib ./example/verdaccio-minio-storage
+  } || {
+    panic "Failed to copy plugin to example"
+  }
+}
+
+prune() {
+  title "Pruning docker containers & volumes"
+  example
+  docker-compose rm -v --stop --force >/dev/null 2>&1
+  docker volume rm example_minio >/dev/null 2>&1
+}
+
+start() {
+  title "Starting containers"
+  {
+    example
+    docker-compose up -d --build
+    sleep 1s
+    isContainerRunning $MINIO_SERVICE
+    isContainerRunning $VERDACCIO_SERVICE
+  } || {
+    panic "Failed to start the containers"
+  }
+}

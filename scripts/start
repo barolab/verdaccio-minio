@@ -1,0 +1,23 @@
+#!/bin/bash
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+source "$DIR/util"
+
+# Build plugin
+build
+
+# Copy plugin to the example directory
+copy
+
+# Remove old containers to start from scratch
+prune
+
+# Build & Start the containers
+start
+
+# Go to example directory
+example
+
+# Show Verdaccio container logs
+docker-compose logs -f verdaccio

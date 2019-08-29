@@ -65,3 +65,5 @@ lib/
 
 # Custom
 example/verdaccio-minio-storage
+example/*.log
+example/*.har
