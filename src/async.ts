@@ -31,6 +31,10 @@ const isInfinite = (num: number | string): boolean => num === 'INFINITELY' || nu
  * @param ms
  */
 async function wait(ms: number): Promise<void> {
+  if (ms === 0) {
+    return Promise.resolve();
+  }
+
   return new Promise<void>((resolve): number => setTimeout(resolve, ms));
 }
 
@@ -60,7 +64,10 @@ const retry = (cfg?: Partial<RetryConfig>): RetryFunction => {
         error = err;
       }
 
-      await wait(config.delay);
+      // don't wait for last execution
+      if (i < retries) {
+        await wait(config.delay);
+      }
     }
 
     throw error;
