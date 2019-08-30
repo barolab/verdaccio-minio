@@ -94,7 +94,7 @@ export default class Storage implements ILocalPackageManager {
         await this.savePackage(name, value, cb);
       } else {
         this.debug({ key, error }, 'Creating package @{name} with @{key} failed: @{error}');
-        throw wrap(error);
+        cb(wrap(error));
       }
     }
   }
