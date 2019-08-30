@@ -1,48 +1,11 @@
-import { Logger } from '@verdaccio/types';
-import { Readable } from 'stream';
 import { Client as MinioClient } from 'minio';
-import { ClientConfig } from './config';
+import { stream, logger, config, stat } from '../tests/mocks';
 import Client from './client';
 
 jest.mock('minio');
 
 // eslint-disable-next-line
 const MockedMinioClient = <jest.Mock<MinioClient>>MinioClient;
-
-const stream = (str: string): Readable => {
-  const b = Buffer.from(str);
-  const readable = new Readable();
-  readable._read = (): void => {};
-  readable.push(b);
-  readable.push(null);
-
-  return readable;
-};
-
-const stat = {
-  size: 100,
-  etag: 'object etag',
-  lastModified: new Date(),
-  metaData: {},
-};
-
-const config: ClientConfig = {
-  endPoint: 'minio',
-  accessKey: 'this-is-not-so-secret',
-  secretKey: 'this-is-not-so-secret',
-  bucket: 'buck-test',
-  region: 'north-pole',
-};
-
-const logger = {
-  child: (): Logger => logger,
-  debug: (): void => {},
-  trace: (): void => {},
-  error: (): void => {},
-  http: (): void => {},
-  warn: (): void => {},
-  info: (): void => {},
-};
 
 describe('client', () => {
   beforeEach(() => {

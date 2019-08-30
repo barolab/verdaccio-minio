@@ -6,7 +6,7 @@ interface MinioError extends Error {
   resource?: string;
 }
 
-const MINIO = {
+export const MINIO = {
   NO_SUCH_KEY: 'NoSuchKey',
   NOT_FOUND: 'NotFound',
 };
