@@ -68,6 +68,16 @@
     ],
     "transform": {
       "^.+\\.ts?$": "ts-jest"
-    }
+    },
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html",
+      "clover"
+    ]
   }
 }
