@@ -73,7 +73,7 @@ export default class Database {
   /**
    * Get all the packages in the database
    */
-  public async get(): Promise<any> {
+  public async get(): Promise<string[]> {
     try {
       this.debug({}, 'Loading all the packages');
       const state = await this.load();

@@ -25,7 +25,7 @@ export default class Tokens {
     return keys.map(k => state.tokens[k]);
   }
 
-  public async add(token: Token): Promise<any> {
+  public async add(token: Token): Promise<void> {
     const state = await this.load();
     const entry = `${token.user}:${token.key}`;
 
@@ -35,7 +35,7 @@ export default class Tokens {
     return await this.save(next);
   }
 
-  public async remove(user: string, key: string): Promise<any> {
+  public async remove(user: string, key: string): Promise<void> {
     const entry = `${user}:${key}`;
     const state = await this.load();
     const {

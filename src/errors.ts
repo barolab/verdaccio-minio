@@ -16,7 +16,7 @@ const MINIO = {
  *
  * @param err
  */
-export const hasCode = (err: Error) => 'code' in err;
+export const hasCode = (err: Error): boolean => 'code' in err;
 
 /**
  * Check if the given error is a 404

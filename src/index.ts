@@ -82,7 +82,7 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     return this.retry(() => this.db.getSecret());
   }
 
-  public setSecret(secret: string): Promise<any> {
+  public setSecret(secret: string): Promise<void> {
     return this.retry(() => this.db.setSecret(secret));
   }
 
@@ -90,11 +90,11 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     return this.retry(() => this.tokens.get(filter));
   }
 
-  public saveToken(token: Token): Promise<any> {
+  public saveToken(token: Token): Promise<void> {
     return this.retry(() => this.tokens.add(token));
   }
 
-  public deleteToken(user: string, key: string): Promise<any> {
+  public deleteToken(user: string, key: string): Promise<void> {
     return this.retry(() => this.tokens.remove(user, key));
   }
 

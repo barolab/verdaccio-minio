@@ -19,7 +19,7 @@ export default class Storage implements ILocalPackageManager {
     this.name = name;
   }
 
-  writeTarball(name: string): IUploadTarball {
+  public writeTarball(name: string): IUploadTarball {
     const key = `${this.name}/${name}`;
     const tbs = new WriteStream(this.logger, key, {});
     this.debug({ key }, 'Writing tarball at @{key}');
@@ -35,7 +35,7 @@ export default class Storage implements ILocalPackageManager {
     return tbs;
   }
 
-  uploadTarball(key: string, stream: WriteStream): void {
+  public uploadTarball(key: string, stream: WriteStream): void {
     this.client
       .put(key, stream)
       .then(etag => {
@@ -48,7 +48,7 @@ export default class Storage implements ILocalPackageManager {
       });
   }
 
-  readTarball(name: string): IReadTarball {
+  public readTarball(name: string): IReadTarball {
     const key = `${this.name}/${name}`;
     const tbs = new ReadStream(this.logger, key, {});
     this.debug({ key }, 'Reading tarball at @{key}');
@@ -68,7 +68,7 @@ export default class Storage implements ILocalPackageManager {
     return tbs;
   }
 
-  async readPackage(name: string, cb: Function): Promise<void> {
+  public async readPackage(name: string, cb: Function): Promise<void> {
     const key = `${name}/${PKG_FILE_NAME}`;
     try {
       this.debug({ key }, 'Reading package @{name} at @{key}');
@@ -81,7 +81,7 @@ export default class Storage implements ILocalPackageManager {
     }
   }
 
-  async createPackage(name: string, value: Package, cb: Function): Promise<void> {
+  public async createPackage(name: string, value: Package, cb: Function): Promise<void> {
     const key = `${this.name}/${PKG_FILE_NAME}`;
 
     try {
@@ -99,7 +99,7 @@ export default class Storage implements ILocalPackageManager {
     }
   }
 
-  async savePackage(name: string, json: Package, cb: Function): Promise<void> {
+  public async savePackage(name: string, json: Package, cb: Function): Promise<void> {
     const key = `${name}/${PKG_FILE_NAME}`;
     const data = JSON.stringify(json, null, '  ');
 
@@ -114,7 +114,7 @@ export default class Storage implements ILocalPackageManager {
     }
   }
 
-  async deletePackage(name: string, cb: Function): Promise<void> {
+  public async deletePackage(name: string, cb: Function): Promise<void> {
     const key = `${this.name}/${name}`;
     try {
       this.debug({ key }, 'Deleting package @{name} at @{key}');
@@ -127,7 +127,7 @@ export default class Storage implements ILocalPackageManager {
     }
   }
 
-  async removePackage(cb: Function): Promise<void> {
+  public async removePackage(cb: Function): Promise<void> {
     try {
       this.debug({}, 'Removing package @{name}');
       await this.client.remove(this.name);
@@ -139,7 +139,7 @@ export default class Storage implements ILocalPackageManager {
     }
   }
 
-  async updatePackage(
+  public async updatePackage(
     name: string,
     update: Function,
     write: Function,

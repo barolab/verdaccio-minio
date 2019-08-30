@@ -2,7 +2,7 @@ import { UploadTarball, ReadTarball } from '@verdaccio/streams';
 import { Logger } from '@verdaccio/types';
 import { Stream } from 'stream';
 
-const debug = (stream: Stream, logger: Logger, name: string) => {
+const debug = (stream: Stream, logger: Logger, name: string): void => {
   stream.on('end', () => logger.debug({ name }, '[Minio] @{name} is ending'));
   stream.on('open', () => logger.debug({ name }, '[Minio] @{name} is opened'));
   stream.on('close', () => logger.debug({ name }, '[Minio] @{name} is closing'));
@@ -15,7 +15,7 @@ export class WriteStream extends UploadTarball {
   private logger: Logger;
   private name: string;
 
-  constructor(logger: Logger, name: string, options: any) {
+  public constructor(logger: Logger, name: string, options: object) {
     super(options);
     debug(this, logger, `WriteStream<${name}>`);
 
@@ -23,12 +23,12 @@ export class WriteStream extends UploadTarball {
     this.name = name;
   }
 
-  abort(): void {
+  public abort(): void {
     this.logger.debug({ name: this.name }, '[Minio] WriteStream<@{name}> is being aborted');
     this.emit('close');
   }
 
-  done(): void {
+  public done(): void {
     this.logger.debug({ name: this.name }, '[Minio] WriteStream<@{name}> is being finished');
     this.emit('success');
   }
@@ -38,7 +38,7 @@ export class ReadStream extends ReadTarball {
   private logger: Logger;
   private name: string;
 
-  constructor(logger: Logger, name: string, options: any) {
+  public constructor(logger: Logger, name: string, options: object) {
     super(options);
     debug(this, logger, `ReadStream<${name}>`);
 
@@ -46,7 +46,7 @@ export class ReadStream extends ReadTarball {
     this.name = name;
   }
 
-  abort(): void {
+  public abort(): void {
     this.logger.debug({ name: this.name }, '[Minio] ReadStream<@{name}> is being aborted');
     this.emit('close');
   }

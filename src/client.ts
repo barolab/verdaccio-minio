@@ -1,4 +1,4 @@
-import str, { buffer } from 'get-stream';
+import str from 'get-stream';
 import { Stream } from 'stream';
 import { Logger } from '@verdaccio/types';
 import { Client as MinioClient } from 'minio';
@@ -108,7 +108,7 @@ export default class Client {
     return await this.client.removeObject(this.bucket, name);
   }
 
-  private debug(conf: any, template: string): void {
+  private debug(conf: object, template: string): void {
     this.logger.debug(
       {
         bucket: this.bucket,
