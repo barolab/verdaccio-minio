@@ -54,14 +54,14 @@ export default class Client {
     try {
       const exist = await this.client.bucketExists(this.bucket);
       if (!exist) {
-        this.debug({}, '[Minio] Bucket @{bucket} does not exist, creating it');
+        this.debug({}, 'Bucket @{bucket} does not exist, creating it');
         await this.client.makeBucket(this.bucket, this.region);
-        this.debug({}, '[Minio] Bucket @{bucket} creating successfully');
+        this.debug({}, 'Bucket @{bucket} creating successfully');
       } else {
-        this.debug({}, '[Minio] Bucket @{bucket} already exist, keep going');
+        this.debug({}, 'Bucket @{bucket} already exist, keep going');
       }
     } catch (error) {
-      this.debug({ error }, '[Minio] Failed to ensure bucket @{bucket} exist, @{error}');
+      this.debug({ error }, 'Failed to ensure bucket @{bucket} exist, @{error}');
       throw new Error(`Failed to ensure bucket ${this.bucket} exist: ${error}`);
     }
   }
@@ -76,19 +76,19 @@ export default class Client {
 
   public async exist(name: string): Promise<boolean> {
     try {
-      this.logger.debug({ name }, '[Minio] Checking if object @{name} exists');
+      this.logger.debug({ name }, 'Checking if object @{name} exists');
       const stat = await this.stat(name);
-      this.logger.debug({ name, time: stat.time }, '[Minio] Object @{name} exist, since @{time}');
+      this.logger.debug({ name, time: stat.time }, 'Object @{name} exist, since @{time}');
       return true;
     } catch (error) {
-      this.logger.debug({ name, error }, '[Minio] Object @{name} does not exist: @{error}');
+      this.logger.debug({ name, error }, 'Object @{name} does not exist: @{error}');
       return false;
     }
   }
 
   public async stat(name: string): Promise<PackageStat> {
     const data = await this.client.statObject(this.bucket, name);
-    this.logger.debug({ name, data }, '[Minio] Got stat for object @{name}, @{data}');
+    this.logger.debug({ name, data }, 'Got stat for object @{name}, @{data}');
 
     return {
       name: name,
@@ -115,7 +115,7 @@ export default class Client {
         region: this.region,
         ...conf,
       },
-      template
+      `[Minio] ${template}`
     );
   }
 }

@@ -28,7 +28,9 @@ export default class Tokens {
   public async add(token: Token): Promise<any> {
     const state = await this.load();
     const entry = `${token.user}:${token.key}`;
+
     const next = { tokens: { ...state.tokens, [entry]: token } };
+    this.debug({ entry }, 'Token @{entry} is being added');
 
     return await this.save(next);
   }
@@ -37,8 +39,10 @@ export default class Tokens {
     const entry = `${user}:${key}`;
     const state = await this.load();
     const {
-      tokens: { [entry]: unusedVar, ...next },
+      tokens: { [entry]: val, ...next },
     } = state;
+
+    this.debug({ entry, val }, 'Token @{entry}=@{val} is being removed');
 
     return await this.save({ tokens: next });
   }
@@ -54,14 +58,14 @@ export default class Tokens {
 
     let db: TokenStorage;
     try {
-      this.debug({}, '[Minio] Loading tokens in cache');
+      this.debug({}, 'Loading tokens in cache');
       const str = await this.client.get(FILE_NAME);
 
-      this.debug({ str }, '[Minio] Got tokens from remote, @{str}');
+      this.debug({ str }, 'Got tokens from remote, @{str}');
       db = str === '' ? { tokens: {} } : JSON.parse(str);
     } catch (error) {
-      this.debug({ error }, '[Minio] Failed to load tokens from remote storage, @{error}');
-      throw new Error(`[Minio] Failed to load tokens from remote storage, ${error}`);
+      this.debug({ error }, 'Failed to load tokens from remote storage, @{error}');
+      throw new Error(`Failed to load tokens from remote storage, ${error}`);
     }
 
     return db;
@@ -74,22 +78,22 @@ export default class Tokens {
    */
   private async save(db: TokenStorage): Promise<void> {
     try {
-      this.debug({}, '[Minio] Saving cached tokens to storage');
+      this.debug({}, 'Saving cached tokens to storage');
       const res = await this.client.put(FILE_NAME, JSON.stringify(db));
-      this.debug({ res }, '[Minio] tokens stored successfully, @{res}');
+      this.debug({ res }, 'Tokens stored successfully, @{res}');
       this.cached = db;
     } catch (error) {
       if (isNotFound(error)) {
-        this.debug({}, '[Minio] tokens does not exist yet in storage, initializing it');
+        this.debug({}, 'Tokens does not exist yet in storage, initializing it');
         db = { tokens: {} };
       } else {
-        this.debug({ error }, '[Minio] Failed to load tokens from remote storage, @{error}');
-        throw new Error(`[Minio] Failed to load tokens from remote storage, ${error}`);
+        this.debug({ error }, 'Failed to load tokens from remote storage, @{error}');
+        throw new Error(`Failed to load tokens from remote storage, ${error}`);
       }
     }
   }
 
-  private debug(conf: any, template: string): void {
-    this.logger.debug(conf, template);
+  private debug(conf: object, template: string): void {
+    this.logger.debug(conf, `[Minio] ${template}`);
   }
 }

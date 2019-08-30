@@ -22,7 +22,7 @@ export default class Storage implements ILocalPackageManager {
   writeTarball(name: string): IUploadTarball {
     const key = `${this.name}/${name}`;
     const tbs = new WriteStream(this.logger, key, {});
-    this.debug({ key }, '[Minio] Writing tarball at @{key}');
+    this.debug({ key }, 'Writing tarball at @{key}');
     this.client.exist(key).then(exist => {
       if (exist) {
         return tbs.emit('error', getConflict());
@@ -39,11 +39,11 @@ export default class Storage implements ILocalPackageManager {
     this.client
       .put(key, stream)
       .then(etag => {
-        this.debug({ key, etag }, '[Minio] Tarball at @{key} as been uploaded successfully');
+        this.debug({ key, etag }, 'Tarball at @{key} as been uploaded successfully');
         stream.emit('success');
       })
       .catch(error => {
-        this.debug({ key, error }, '[Minio] Received error when writing tarball at @{key}: @{error}');
+        this.debug({ key, error }, 'Received error when writing tarball at @{key}: @{error}');
         stream.emit('error', wrap(error));
       });
   }
@@ -51,17 +51,17 @@ export default class Storage implements ILocalPackageManager {
   readTarball(name: string): IReadTarball {
     const key = `${this.name}/${name}`;
     const tbs = new ReadStream(this.logger, key, {});
-    this.debug({ key }, '[Minio] Reading tarball at @{key}');
+    this.debug({ key }, 'Reading tarball at @{key}');
     Promise.all([this.client.getStream(key), this.client.stat(key)])
       .then(([stream, stat]) => {
-        this.debug({ key }, '[Minio] Opening stream for reading tarball at @{key}');
+        this.debug({ key }, 'Opening stream for reading tarball at @{key}');
         stream.pipe(tbs);
         stream.on('error', error => tbs.emit('error', wrap(error)));
         tbs.emit('content-length', stat.size);
         tbs.emit('open');
       })
       .catch(error => {
-        this.debug({ key, error }, '[Minio] Received error when reading tarball at @{key}: @{error}');
+        this.debug({ key, error }, 'Received error when reading tarball at @{key}: @{error}');
         tbs.emit('error', wrap(error));
       });
 
@@ -71,13 +71,13 @@ export default class Storage implements ILocalPackageManager {
   async readPackage(name: string, cb: Function): Promise<void> {
     const key = `${name}/${PKG_FILE_NAME}`;
     try {
-      this.debug({ key }, '[Minio] Reading package @{name} at @{key}');
+      this.debug({ key }, 'Reading package @{name} at @{key}');
       const data = await this.client.get(key);
       cb(null, JSON.parse(data));
-      this.debug({ key }, '[Minio] Successfully loaded package @{name} at @{key}');
+      this.debug({ key }, 'Successfully loaded package @{name} at @{key}');
     } catch (error) {
       cb(wrap(error));
-      this.debug({ key, error }, '[Minio] Failed to load package @{name} at @{key}, @{error}');
+      this.debug({ key, error }, 'Failed to load package @{name} at @{key}, @{error}');
     }
   }
 
@@ -85,15 +85,15 @@ export default class Storage implements ILocalPackageManager {
     const key = `${this.name}/${PKG_FILE_NAME}`;
 
     try {
-      this.debug({ key }, '[Minio] Creating package @{name} at @{key}');
+      this.debug({ key }, 'Creating package @{name} at @{key}');
       const data = await this.client.get(key);
       cb(getConflict(ERROR_EXIST));
-      this.debug({ data }, '[Minio] Cannot create package @{name} because it already exist');
+      this.debug({ data }, 'Cannot create package @{name} because it already exist');
     } catch (error) {
       if (isNotFound(error)) {
         await this.savePackage(name, value, cb);
       } else {
-        this.debug({ key, error }, '[Minio] Creating package @{name} with @{key} failed: @{error}');
+        this.debug({ key, error }, 'Creating package @{name} with @{key} failed: @{error}');
         throw wrap(error);
       }
     }
@@ -104,38 +104,38 @@ export default class Storage implements ILocalPackageManager {
     const data = JSON.stringify(json, null, '  ');
 
     try {
-      this.debug({ key }, '[Minio] Saving package @{name} at @{key}');
+      this.debug({ key }, 'Saving package @{name} at @{key}');
       const result = await this.client.put(key, data);
       cb(null);
-      this.debug({ key, result }, '[Minio] Saved package @{name} at @{key}, @{result}');
+      this.debug({ key, result }, 'Saved package @{name} at @{key}, @{result}');
     } catch (error) {
       cb(wrap(error));
-      this.debug({ key, error }, '[Minio] Failed to save package @{name} at @{key}, @{error}');
+      this.debug({ key, error }, 'Failed to save package @{name} at @{key}, @{error}');
     }
   }
 
   async deletePackage(name: string, cb: Function): Promise<void> {
     const key = `${this.name}/${name}`;
     try {
-      this.debug({ key }, '[Minio] Deleting package @{name} at @{key}');
+      this.debug({ key }, 'Deleting package @{name} at @{key}');
       await this.client.remove(key);
       cb(null);
-      this.debug({ key }, '[Minio] Deleted package @{name} at @{key}');
+      this.debug({ key }, 'Deleted package @{name} at @{key}');
     } catch (error) {
       cb(wrap(error));
-      this.debug({ key, error }, '[Minio] Failed to delete package @{name} at@{key}, @{error}');
+      this.debug({ key, error }, 'Failed to delete package @{name} at@{key}, @{error}');
     }
   }
 
   async removePackage(cb: Function): Promise<void> {
     try {
-      this.debug({}, '[Minio] Removing package @{name}');
+      this.debug({}, 'Removing package @{name}');
       await this.client.remove(this.name);
       cb(null);
-      this.debug({}, '[Minio] Removed package @{name}');
+      this.debug({}, 'Removed package @{name}');
     } catch (error) {
       cb(wrap(error));
-      this.debug({ error }, '[Minio] Failed to remove package @{name}, @{error}');
+      this.debug({ error }, 'Failed to remove package @{name}, @{error}');
     }
   }
 
@@ -153,22 +153,22 @@ export default class Storage implements ILocalPackageManager {
       const pkg = JSON.parse(data);
       update(pkg, error => {
         if (error) {
-          this.debug({ key, error }, '[Minio] Failed to apply update on package @{name} at @{key}, @{error}');
+          this.debug({ key, error }, 'Failed to apply update on package @{name} at @{key}, @{error}');
           return cb(wrap(error));
         }
 
-        this.debug({ key }, '[Minio] Transforming package @{name} at @{key}');
+        this.debug({ key }, 'Transforming package @{name} at @{key}');
         const next = transform(pkg);
-        this.debug({ key, error }, '[Minio] Transform applied to package @{name} at @{key}, @{next}');
+        this.debug({ key, error }, 'Transform applied to package @{name} at @{key}, @{next}');
         write(name, next, cb);
       });
     } catch (error) {
-      this.debug({ key, error }, '[Minio] Failed to update package @{name} at @{key}, @{error}');
+      this.debug({ key, error }, 'Failed to update package @{name} at @{key}, @{error}');
       return cb(wrap(error));
     }
   }
 
-  private debug(conf: any, template: string): void {
-    this.logger.debug({ name: this.name, ...conf }, template);
+  private debug(conf: object, template: string): void {
+    this.logger.debug({ name: this.name, ...conf }, `[Minio] ${template}`);
   }
 }
