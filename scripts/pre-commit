@@ -40,7 +40,7 @@ if [ "$NAME" != '(no branch)' ]; then
   title "Lint"
   for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.ts$'); do
     {
-      ./node_modules/eslint/bin/eslint.js "${file}" && success "$file"
+      ./node_modules/eslint/bin/eslint.js --max-warnings=0 "${file}" && success "$file"
     } || {
       error "$file"
     }
