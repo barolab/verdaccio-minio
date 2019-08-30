@@ -64,8 +64,12 @@ export default class Tokens {
       this.debug({ str }, 'Got tokens from remote, @{str}');
       db = str === '' ? { tokens: {} } : JSON.parse(str);
     } catch (error) {
-      this.debug({ error }, 'Failed to load tokens from remote storage, @{error}');
-      throw new Error(`Failed to load tokens from remote storage, ${error}`);
+      if (isNotFound(error)) {
+        this.debug({}, 'Tokens does not exist yet in storage, initializing it');
+        db = { tokens: {} };
+      } else {
+        throw new Error(`Failed to load tokens from remote storage, ${error}`);
+      }
     }
 
     return db;
@@ -83,13 +87,7 @@ export default class Tokens {
       this.debug({ res }, 'Tokens stored successfully, @{res}');
       this.cached = db;
     } catch (error) {
-      if (isNotFound(error)) {
-        this.debug({}, 'Tokens does not exist yet in storage, initializing it');
-        db = { tokens: {} };
-      } else {
-        this.debug({ error }, 'Failed to load tokens from remote storage, @{error}');
-        throw new Error(`Failed to load tokens from remote storage, ${error}`);
-      }
+      throw new Error(`Failed to save tokens from remote storage, ${error}`);
     }
   }
 
