@@ -62,7 +62,7 @@ export default class Client {
       }
     } catch (error) {
       this.debug({ error }, 'Failed to ensure bucket @{bucket} exist, @{error}');
-      throw new Error(`Failed to ensure bucket ${this.bucket} exist: ${error}`);
+      throw new Error(`Failed to ensure bucket ${this.bucket} exist: ${error.message}`);
     }
   }
 
