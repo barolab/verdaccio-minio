@@ -29,8 +29,8 @@
     "node": ">=8"
   },
   "scripts": {
-    "postinstall": "bash ./scripts/post-install",
     "accept": "bash ./scripts/accept",
+    "hooks": "bash ./scripts/hooks",
     "start": "bash ./scripts/start",
     "lint": "eslint \"src/**/*.{js,ts}\"",
     "test": "jest",
