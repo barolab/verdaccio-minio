@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A verdaccio plugin for storing data in Minio",
   "homepage": "https://github.com/barolab/verdaccio-minio#readme",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "Apache-2.0",
   "keywords": [
     "Verdaccio",
     "S3",
