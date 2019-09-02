@@ -53,7 +53,7 @@ image() {
   title "Build & push docker image"
   {
     VERSION=$(node -p "require('./package.json').version")
-    docker build -t "barolab/verdaccio:$VERSION" .
+    docker build --no-cache -t "barolab/verdaccio:$VERSION" .
     docker tag "barolab/verdaccio:$VERSION" "barolab/verdaccio:latest"
 
     docker push "barolab/verdaccio:$VERSION"
