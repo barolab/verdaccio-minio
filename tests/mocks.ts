@@ -26,6 +26,9 @@ export const stream = (str: string): Readable => {
 };
 
 export const stat = {
+  name: 'test',
+  path: 'test/test.tar.gz',
+  time: new Date().getTime(),
   size: 100,
   etag: 'object etag',
   lastModified: new Date(),

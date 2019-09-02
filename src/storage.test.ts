@@ -1,5 +1,6 @@
 import { getConflict } from '@verdaccio/commons-api';
-import { pkg, logger, NotFound, Unknown } from '../tests/mocks';
+import { pkg, stat, stream, logger, NotFound, Unknown } from '../tests/mocks';
+import { wrap } from './errors';
 import Storage from './storage';
 import Client from './client';
 
@@ -192,6 +193,132 @@ describe('storage', () => {
           expect(update).not.toHaveBeenCalled();
           expect(write).not.toHaveBeenCalled();
         });
+      });
+    });
+  });
+
+  describe('tarballs', () => {
+    it('should write tarball to storage using streams', done => {
+      expect.assertions(1);
+      client.exist.mockResolvedValue(false);
+      client.put.mockResolvedValue('etag');
+
+      const st = new Storage(client, logger, 'test');
+      const tbs = st.writeTarball('test.tar.gz');
+
+      tbs.on('success', () => {
+        done();
+      });
+
+      tbs.on('open', () => {
+        expect(client.exist).toHaveBeenCalledWith('test/test.tar.gz');
+      });
+
+      tbs.on('error', error => {
+        done.fail(`Unexpected error has been emitted in write stream: ${error}`);
+      });
+    });
+
+    it('should emit an error when package exists', done => {
+      expect.assertions(1);
+      client.exist.mockResolvedValue(true);
+
+      const st = new Storage(client, logger, 'test');
+      const tbs = st.writeTarball('test.tar.gz');
+
+      tbs.on('success', () => {
+        done.fail('Received success while an error is expected');
+      });
+
+      tbs.on('error', error => {
+        expect(error).toEqual(getConflict());
+        done();
+      });
+    });
+
+    it('should emit an error when uploading fails', done => {
+      expect.assertions(2);
+      client.exist.mockResolvedValue(false);
+      client.put.mockRejectedValue(Unknown);
+
+      const st = new Storage(client, logger, 'test');
+      const tbs = st.writeTarball('test.tar.gz');
+
+      tbs.on('success', () => {
+        done.fail('Received success while an error is expected');
+      });
+
+      tbs.on('open', () => {
+        expect(client.exist).toHaveBeenCalledWith('test/test.tar.gz');
+      });
+
+      tbs.on('error', error => {
+        expect(error).toEqual(wrap(Unknown));
+        done();
+      });
+    });
+
+    it('should be able to read package in a stream', done => {
+      expect.assertions(3);
+      const s = stream('test');
+      client.getStream.mockResolvedValue(s);
+      client.stat.mockResolvedValue(stat);
+
+      const st = new Storage(client, logger, 'test');
+      const tbs = st.readTarball('test.tar.gz');
+
+      tbs.on('content-length', size => {
+        expect(size).toEqual(stat.size);
+      });
+
+      tbs.on('open', () => {
+        expect(client.getStream).toHaveBeenCalledWith('test/test.tar.gz');
+        expect(client.stat).toHaveBeenCalledWith('test/test.tar.gz');
+        done();
+      });
+
+      tbs.on('error', error => {
+        done.fail(`Unexpected error has been emitted in write stream: ${error}`);
+      });
+    });
+
+    it('should emit all the errors that happens with the storage stream', done => {
+      expect.assertions(4);
+      const s = stream('test');
+      client.getStream.mockResolvedValue(s);
+      client.stat.mockResolvedValue(stat);
+
+      const st = new Storage(client, logger, 'test');
+      const tbs = st.readTarball('test.tar.gz');
+
+      tbs.on('content-length', size => {
+        expect(size).toEqual(stat.size);
+      });
+
+      tbs.on('open', () => {
+        expect(client.getStream).toHaveBeenCalledWith('test/test.tar.gz');
+        expect(client.stat).toHaveBeenCalledWith('test/test.tar.gz');
+        s.emit('error', Unknown);
+      });
+
+      tbs.on('error', error => {
+        expect(error).toEqual(Unknown);
+        done();
+      });
+    });
+
+    it('should emit error when storage return a failure', done => {
+      expect.assertions(1);
+      const s = stream('test');
+      client.getStream.mockResolvedValue(s);
+      client.stat.mockRejectedValue(Unknown);
+
+      const st = new Storage(client, logger, 'test');
+      const tbs = st.readTarball('test.tar.gz');
+
+      tbs.on('error', error => {
+        expect(error).toEqual(Unknown);
+        done();
       });
     });
   });
