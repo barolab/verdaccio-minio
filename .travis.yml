@@ -1,4 +1,7 @@
 sudo: false
+language: node_js
+node_js:
+  - '10.16'
 
 cache:
   yarn: true
@@ -12,11 +15,9 @@ before_install:
 matrix:
   fast_finish: true
   include:
-    - language: node_js
-      node_js:
-        - '10.16'
-      before_script:
+    - before_script:
         - yarn install --non-interactive --no-progress --ignore-scripts
       script:
         - yarn lint
         - yarn test:coverage
+        - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
