@@ -30,7 +30,7 @@ const isInfinite = (num: number | string): boolean => num === 'INFINITELY' || nu
  *
  * @param ms
  */
-async function wait(ms: number): Promise<void> {
+export async function wait(ms: number): Promise<void> {
   if (ms === 0) {
     return Promise.resolve();
   }

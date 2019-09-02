@@ -1,4 +1,4 @@
-import { Logger, Package } from '@verdaccio/types';
+import { Logger, Config, Package } from '@verdaccio/types';
 import { Readable } from 'stream';
 import { ClientConfig } from '../src/config';
 import { MINIO } from '../src/errors';
@@ -32,22 +32,14 @@ export const stat = {
   metaData: {},
 };
 
-export const config: ClientConfig = {
-  endPoint: 'minio',
-  accessKey: 'this-is-not-so-secret',
-  secretKey: 'this-is-not-so-secret',
-  bucket: 'buck-test',
-  region: 'north-pole',
-};
-
 export const logger = {
   child: (): Logger => logger,
-  debug: (): void => {},
-  trace: (): void => {},
-  error: (): void => {},
-  http: (): void => {},
-  warn: (): void => {},
-  info: (): void => {},
+  debug: jest.fn(),
+  trace: jest.fn(),
+  error: jest.fn(),
+  http: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn(),
 };
 
 export const pkg: Package = {
@@ -58,4 +50,35 @@ export const pkg: Package = {
   _attachments: {},
   _uplinks: {},
   _rev: '',
+};
+
+export const token = {
+  user: 'user-c',
+  key: 'token-a',
+  token: 'ca',
+  readonly: true,
+  created: new Date().getTime(),
+};
+
+export const config: ClientConfig = {
+  endPoint: 'minio',
+  accessKey: 'this-is-not-so-secret',
+  secretKey: 'this-is-not-so-secret',
+  bucket: 'buck-test',
+  region: 'north-pole',
+};
+
+export const pcfg: Config = {
+  getMatchedPackagesSpec: () => {},
+  checkSecretKey: () => '',
+  user_agent: '',
+  server_id: '',
+  secret: '',
+  self_path: '',
+  packages: {},
+  uplinks: {},
+  security: {
+    web: { sign: {}, verify: {} },
+    api: { legacy: false },
+  },
 };

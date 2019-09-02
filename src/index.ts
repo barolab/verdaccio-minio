@@ -27,10 +27,6 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
   private retry: RetryFunction;
 
   public constructor(config: Config, options: PluginOptions<PluginConfig>) {
-    if (!config) {
-      throw new Error('Minio storage is missing config. Add a `store.minio-storage` section to your config file');
-    }
-
     this.retry = retry({
       log: msg => options.logger.debug({}, `[Minio] ${msg}`),
       delay: config.delay || 500, // 0.5 sec
@@ -44,7 +40,7 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     this.db = new Database(this.client, this.logger);
 
     this.client.initialize().catch(error => {
-      throw new Error(`There was an error initializing client: ${error}`);
+      this.logger.error({ error }, 'There was an error initializing client: @{error}');
     });
   }
 
@@ -53,11 +49,6 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
       .then(results => Promise.all(results.map(r => this.stat(r, onPackage))))
       .then(() => onEnd(null))
       .catch(error => onEnd(error));
-  }
-
-  private async stat(name: string, onPackage: Callback): Promise<void> {
-    const stat = await this.retry(() => this.client.stat(name));
-    onPackage(stat);
   }
 
   public get(callback: Function): void {
@@ -100,5 +91,10 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
 
   public getPackageStorage(name: string): IPackageStorage {
     return new Storage(this.client, this.logger, name);
+  }
+
+  private async stat(name: string, onPackage: Callback): Promise<void> {
+    const stat = await this.retry(() => this.client.stat(name));
+    onPackage(stat);
   }
 }
