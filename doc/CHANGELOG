@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.1.3
+### Changed
+ - Fix caching issue with Docker, not installing the latest version of the package
+ - Fix release scripts asking package version twice
+
 ## 0.1.2
 ### Added
  - A new Docker image with verdaccio + minio plugin installed
