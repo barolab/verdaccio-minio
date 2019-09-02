@@ -24,6 +24,6 @@ jobs:
 
     - stage: Build
       before_script:
-        - yarn install --production --no-progress --ignore-scripts
+        - yarn install --no-progress --ignore-scripts
       script:
         - yarn build
