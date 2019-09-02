@@ -1,4 +1,4 @@
-import { Logger } from '@verdaccio/types';
+import { Logger, Package } from '@verdaccio/types';
 import { Readable } from 'stream';
 import { ClientConfig } from '../src/config';
 import { MINIO } from '../src/errors';
@@ -48,4 +48,14 @@ export const logger = {
   http: (): void => {},
   warn: (): void => {},
   info: (): void => {},
+};
+
+export const pkg: Package = {
+  name: 'test',
+  versions: {},
+  'dist-tags': {},
+  _distfiles: {},
+  _attachments: {},
+  _uplinks: {},
+  _rev: '',
 };

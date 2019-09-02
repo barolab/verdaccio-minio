@@ -157,9 +157,8 @@ export default class Storage implements ILocalPackageManager {
           return cb(wrap(error));
         }
 
-        this.debug({ key }, 'Transforming package @{name} at @{key}');
         const next = transform(pkg);
-        this.debug({ key, error }, 'Transform applied to package @{name} at @{key}, @{next}');
+        this.debug({ key, next }, 'Transform applied to package @{name} at @{key}, @{next}');
         write(name, next, cb);
       });
     } catch (error) {

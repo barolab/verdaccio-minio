@@ -1,19 +1,9 @@
 import { getConflict } from '@verdaccio/commons-api';
-import { logger, NotFound, Unknown } from '../tests/mocks';
+import { pkg, logger, NotFound, Unknown } from '../tests/mocks';
 import Storage from './storage';
 import Client from './client';
 
 jest.mock('./client');
-
-const pkg = {
-  name: 'test',
-  versions: {},
-  _rev: '',
-  _distfiles: {},
-  _attachments: {},
-  _uplinks: {},
-  'dist-tags': {},
-};
 
 // eslint-disable-next-line
 const MockedClient = <jest.Mock<Client>>Client;
@@ -137,6 +127,70 @@ describe('storage', () => {
         const st = new Storage(client, logger, 'test');
         await st.removePackage(err => {
           expect(err).toEqual(NotFound);
+        });
+      });
+    });
+
+    describe('update', () => {
+      it('can update a package', async () => {
+        expect.assertions(4);
+        client.get.mockResolvedValue(JSON.stringify(pkg));
+        const transformed = { ...pkg, name: 'transformed-test' };
+        const transform = jest.fn();
+        const update = jest.fn();
+        const write = jest.fn();
+
+        transform.mockImplementation(() => transformed);
+        update.mockImplementation((p, cb) => cb(null, p));
+        write.mockImplementation((name, state, cb) => cb(null, name, state));
+
+        const st = new Storage(client, logger, 'test');
+        await st.updatePackage('test', update, write, transform, err => {
+          expect(err).toBeNull();
+          expect(transform).toHaveBeenCalled();
+          expect(update).toHaveBeenCalled();
+          expect(write).toHaveBeenCalled();
+        });
+      });
+      it('fails when updating failed', async () => {
+        expect.assertions(4);
+        client.get.mockResolvedValue(JSON.stringify(pkg));
+        const transformed = { ...pkg, name: 'transformed-test' };
+        const transform = jest.fn();
+        const update = jest.fn();
+        const write = jest.fn();
+
+        transform.mockImplementation(() => transformed);
+        update.mockImplementation((p, cb) => cb(Unknown, p));
+        write.mockImplementation((name, state, cb) => cb(null, name, state));
+
+        const st = new Storage(client, logger, 'test');
+        await st.updatePackage('test', update, write, transform, err => {
+          expect(err.message).toEqual('Unknown error');
+          expect(transform).not.toHaveBeenCalled();
+          expect(update).toHaveBeenCalled();
+          expect(write).not.toHaveBeenCalled();
+        });
+      });
+
+      it('fails when package is not found', async () => {
+        expect.assertions(4);
+        client.get.mockRejectedValue(NotFound);
+        const transformed = { ...pkg, name: 'transformed-test' };
+        const transform = jest.fn();
+        const update = jest.fn();
+        const write = jest.fn();
+
+        transform.mockImplementation(() => transformed);
+        update.mockImplementation((p, cb) => cb(null, p));
+        write.mockImplementation((name, state, cb) => cb(null, name, state));
+
+        const st = new Storage(client, logger, 'test');
+        await st.updatePackage('test', update, write, transform, err => {
+          expect(err.message).toEqual('Object not found');
+          expect(transform).not.toHaveBeenCalled();
+          expect(update).not.toHaveBeenCalled();
+          expect(write).not.toHaveBeenCalled();
         });
       });
     });
