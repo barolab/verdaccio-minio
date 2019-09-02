@@ -12,12 +12,18 @@ before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.17.3
   - export PATH="$HOME/.yarn/bin:$PATH"
 
-matrix:
-  fast_finish: true
+jobs:
   include:
-    - before_script:
-        - yarn install --non-interactive --no-progress --ignore-scripts
+    - stage: Tests
+      before_script:
+        - yarn install --no-progress --ignore-scripts
       script:
         - yarn lint
         - yarn test:coverage
         - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+
+    - stage: Build
+      before_script:
+        - yarn install --production --no-progress --ignore-scripts
+      script:
+        - yarn build
