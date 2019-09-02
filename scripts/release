@@ -15,19 +15,19 @@ pull() {
 }
 
 bump() {
-  title "Creating a new version using yarn"
+  title "Publishing a new version using yarn"
   {
     if [ "$MODE" == "major" ]; then
-      yarn version --major
+      yarn publish --major
     elif [ "$MODE" == "minor" ]; then
-      yarn version --minor
+      yarn publish --minor
     elif [ "$MODE" == "patch" ]; then
-      yarn version --patch
+      yarn publish --patch
     else
-      yarn version
+      yarn publish
     fi
   } || {
-    panic "Failed to bump package version"
+    panic "Failed to publish package"
   }
 }
 
@@ -37,15 +37,6 @@ push() {
     git push --tags
   } || {
     panic "Failed to push tag to git"
-  }
-}
-
-publish() {
-  title "Pushing package to NPM"
-  {
-    yarn publish
-  } || {
-    panic "Failed to publish package to NPM"
   }
 }
 
@@ -82,5 +73,4 @@ pull
 build
 bump
 push
-publish
 image
