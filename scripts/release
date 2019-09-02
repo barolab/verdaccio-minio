@@ -1,0 +1,86 @@
+#!/bin/bash
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+MODE=""
+
+source "$DIR/util"
+
+pull() {
+  title "Pulling from git to make sure we're up to date"
+  {
+    git pull
+  } || {
+    panic "Failed to pull latest changes from git"
+  }
+}
+
+bump() {
+  title "Creating a new version using yarn"
+  {
+    if [ "$MODE" == "major" ]; then
+      yarn version --major
+    elif [ "$MODE" == "minor" ]; then
+      yarn version --minor
+    elif [ "$MODE" == "patch" ]; then
+      yarn version --patch
+    else
+      yarn version
+    fi
+  } || {
+    panic "Failed to bump package version"
+  }
+}
+
+push() {
+  title "Pushing tag to origin"
+  {
+    git push --tags
+  } || {
+    panic "Failed to push tag to git"
+  }
+}
+
+publish() {
+  title "Pushing package to NPM"
+  {
+    yarn publish
+  } || {
+    panic "Failed to publish package to NPM"
+  }
+}
+
+image() {
+  title "Build & push docker image"
+  {
+    VERSION=$(node -p "require('./package.json').version")
+    docker build -t "barolab/verdaccio:$VERSION" .
+    docker tag "barolab/verdaccio:$VERSION" "barolab/verdaccio:latest"
+
+    docker push "barolab/verdaccio:$VERSION"
+    docker push "barolab/verdaccio:latest"
+  } || {
+    panic "Failed to push new Docker image"
+  }
+}
+
+while [ "$1" != "" ]; do
+  case $1 in
+  --major)
+    MODE="major"
+    ;;
+  --minor)
+    MODE="minor"
+    ;;
+  --patch)
+    MODE="patch"
+    ;;
+  esac
+  shift
+done
+
+pull
+build
+bump
+push
+publish
+image
