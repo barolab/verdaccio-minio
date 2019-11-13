@@ -113,6 +113,6 @@ It's highly recommended that you install the git hooks in your workstation befor
 There's some documentation for contributors that you should read first :
 
 - [Code of Conduct](/CODE_OF_CONDUCT.md)
-- [Contribution Guide](/doc/CONTRIBUTING.md)
+- [Contribution Guide](/CONTRIBUTING.md)
 
 You'll need docker & yarn for a better development experience with this module. You can run `yarn start` to start a minio & verdaccio containers on ports [9000](http://localhost:9000) and [4873](http://localhost:4873). Then using the [`/example`](/example) folder you can install dependencies using verdaccio as a proxy.
