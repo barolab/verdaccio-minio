@@ -71,10 +71,10 @@ copy() {
   title "Copying build result to example folder"
   {
     root
-    mkdir -p ./example/verdaccio-minio-storage
-    cp package.json ./example/verdaccio-minio-storage
-    cp yarn.lock ./example/verdaccio-minio-storage
-    cp -R lib ./example/verdaccio-minio-storage
+    mkdir -p ./example/verdaccio-minio
+    cp package.json ./example/verdaccio-minio
+    cp yarn.lock ./example/verdaccio-minio
+    cp -R lib ./example/verdaccio-minio
   } || {
     panic "Failed to copy plugin to example"
   }

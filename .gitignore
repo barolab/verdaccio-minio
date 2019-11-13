@@ -64,6 +64,6 @@ typings/
 lib/
 
 # Custom
-example/verdaccio-minio-storage
+example/verdaccio-minio
 example/*.log
 example/*.har

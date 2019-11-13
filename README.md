@@ -22,7 +22,7 @@ $ yarn global dir
 /usr/local/share/.config/yarn/global
 
 # Create a symbolic link to your package directory in the verdaccio plugin folder
-$ ln -s /usr/local/share/.config/yarn/global/node_modules/verdaccio-minio /verdaccio/plugins/verdaccio-minio-storage
+$ ln -s /usr/local/share/.config/yarn/global/node_modules/verdaccio-minio /verdaccio/plugins/verdaccio-minio
 ```
 
 Then you'll need to provide a configuration file for the minio storage :
@@ -36,7 +36,7 @@ storage: /verdaccio/storage/data
 
 # Here's the plugin configuration option
 store:
-  minio-storage:
+  minio:
     # The HTTP port of your minio instance
     port: 9000
 

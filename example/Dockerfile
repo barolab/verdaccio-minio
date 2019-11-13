@@ -3,11 +3,11 @@ FROM verdaccio/verdaccio:4.2.2
 # Install minio plugin
 USER root
 ENV NODE_ENV=production
-COPY verdaccio-minio-storage /usr/local/lib/node_modules/verdaccio-minio-storage
-RUN cd /usr/local/lib/node_modules/verdaccio-minio-storage && \
+COPY verdaccio-minio /usr/local/lib/node_modules/verdaccio-minio
+RUN cd /usr/local/lib/node_modules/verdaccio-minio && \
   yarn install --production --ignore-scripts && \
-  ln -s /usr/local/lib/node_modules/verdaccio-minio-storage /verdaccio/plugins/verdaccio-minio-storage  && \
-  chown -R 10001 /usr/local/lib/node_modules/verdaccio-minio-storage && \
+  ln -s /usr/local/lib/node_modules/verdaccio-minio /verdaccio/plugins/verdaccio-minio  && \
+  chown -R 10001 /usr/local/lib/node_modules/verdaccio-minio && \
   chown -R 10001 /verdaccio/plugins
 
 # Copy config with minio storage defined
