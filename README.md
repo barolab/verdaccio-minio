@@ -112,7 +112,7 @@ If you'd like to check K8S resources I highly recommend you look at the [Minio](
 It's highly recommended that you install the git hooks in your workstation before committing anything to this repository. You can run `yarn hooks` to install them.
 There's some documentation for contributors that you should read first :
 
-- [Code of Conduct](/doc/CODE_OF_CONDUCT.md)
+- [Code of Conduct](/CODE_OF_CONDUCT.md)
 - [Contribution Guide](/doc/CONTRIBUTING.md)
 
 You'll need docker & yarn for a better development experience with this module. You can run `yarn start` to start a minio & verdaccio containers on ports [9000](http://localhost:9000) and [4873](http://localhost:4873). Then using the [`/example`](/example) folder you can install dependencies using verdaccio as a proxy.
