@@ -1,4 +1,4 @@
-FROM verdaccio/verdaccio:4.2.2
+FROM verdaccio/verdaccio:4.3.4
 
 # Install minio plugin
 USER root
