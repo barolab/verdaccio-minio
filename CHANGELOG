@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.2.0
+### Breaking changes
+
+In order to add support for older verdaccio versions I've renamed the plugin to `minio` instead of `minio-storage`. This impact all verdaccio configuration file you may have.
+You'll need to replace the `minio-storage` key in the verdaccio config file, so it'll look like this :
+
+```yaml
+plugins: /verdaccio/plugins
+storage: /verdaccio/storage/data
+store:
+  minio: # instead of minio-storage
+    port: 9000
+    region: us-east-1
+    endPoint: minio
+    accessKey: this-is-not-so-secret
+    secretKey: this-is-not-so-secret
+    useSSL: false
+```
+
+### Changed
+ - Changed plugin name in config file ([issue #2](https://github.com/barolab/verdaccio-minio/issues/2))
+ - Update Verdaccio in docker image ([issue #4](https://github.com/barolab/verdaccio-minio/issues/4))
+ - Update module dependencies ([issue #5](https://github.com/barolab/verdaccio-minio/issues/5))
+ - Fix plugin version ([issue #6](https://github.com/barolab/verdaccio-minio/issues/6))
+
 ## 0.1.5
 ### Changed
  - Less verbose debug output
