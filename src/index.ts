@@ -34,7 +34,7 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     });
 
     this.logger = options.logger;
-    this.config = { ...config.store['minio-storage'] };
+    this.config = { ...config.store.minio };
     this.client = new Client(this.config, this.logger);
     this.tokens = new Tokens(this.client, this.logger);
     this.db = new Database(this.client, this.logger);

@@ -13,7 +13,7 @@
 plugins: /verdaccio/plugins
 storage: /verdaccio/storage/data
 store:
-  minio-storage:
+  minio:
     port: 9000
     region: us-east-1
     endPoint: minio

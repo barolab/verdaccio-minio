@@ -3,7 +3,7 @@ import { wait } from './async';
 import Storage from './storage';
 import Plugin from './index';
 
-const cfg = { ...pcfg, ...config, store: { 'minio-storage': config } };
+const cfg = { ...pcfg, ...config, store: { minio: config } };
 const options = { config: cfg, logger };
 
 // eslint-disable-next-line
