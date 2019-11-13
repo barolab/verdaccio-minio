@@ -8,6 +8,7 @@
     "strict": true,
     "outDir": "lib",
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@verdaccio/types/lib/verdaccio", "./node_modules/@types"]
   }

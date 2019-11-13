@@ -9,6 +9,7 @@ import {
   IPluginStorage,
 } from '@verdaccio/types';
 
+import { version } from '../package.json';
 import retry, { RetryFunction } from './async';
 import { PluginConfig } from './config';
 import Database from './db';
@@ -17,7 +18,7 @@ import Tokens from './tokens';
 import Client from './client';
 
 export default class MinioDatabase implements IPluginStorage<PluginConfig> {
-  public version = '0.1.0-alpha';
+  public version = version;
   public logger: Logger;
   public config: PluginConfig;
 
