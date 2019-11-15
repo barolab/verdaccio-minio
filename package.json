@@ -1,6 +1,6 @@
 {
   "name": "verdaccio-minio",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A verdaccio plugin for storing data in Minio",
   "homepage": "https://github.com/barolab/verdaccio-minio#readme",
   "license": "Apache-2.0",
