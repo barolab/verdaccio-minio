@@ -13,7 +13,9 @@ MINIO_ENDPOINT=http://127.0.0.1:9000
 MINIO_ACCESS_KEY=this-is-not-so-secret
 MINIO_SECRET_KEY=this-is-not-so-secret
 VERDACCIO_SERVICE=verdaccio
+VERDACCIO_VERSION=4.3
 VERDACCIO_ENDPOINT=http://127.0.0.1:4873
+COMPOSE_FILE="docker-compose-${VERDACCIO_VERSION}.yaml"
 
 root() {
   cd "$DIR/.."
@@ -40,8 +42,17 @@ panic() {
   exit 1
 }
 
+setVersion() {
+  if [ -z "$1" ]; then
+    panic "Cannot set version to nil"
+  fi
+
+  VERDACCIO_VERSION="$1"
+  COMPOSE_FILE="docker-compose-${VERDACCIO_VERSION}.yaml"
+}
+
 isContainerRunning() {
-  if [ -z $(docker-compose ps -q $1) ] || [ -z $(docker ps -q --no-trunc | grep $(docker-compose ps -q $1)) ]; then
+  if [ -z $(docker-compose -f $COMPOSE_FILE ps -q $1) ] || [ -z $(docker ps -q --no-trunc | grep $(docker-compose -f $COMPOSE_FILE ps -q $1)) ]; then
     panic "$1 is not running."
   else
     success "$1 is running."
@@ -50,8 +61,8 @@ isContainerRunning() {
 
 cleanup() {
   example
-  docker-compose logs $VERDACCIO_SERVICE >"$DIR/../example/out.verdaccio.log"
-  mc ls example/verdaccio >"$DIR/../example/out.minio.log"
+  docker-compose -f $COMPOSE_FILE logs $VERDACCIO_SERVICE >"$DIR/../example/out.verdaccio.${VERDACCIO_VERSION}.log"
+  mc ls example/verdaccio >"$DIR/../example/out.minio.${VERDACCIO_VERSION}.log"
   mc config host rm example
   prune
   root
@@ -81,21 +92,21 @@ copy() {
 }
 
 prune() {
-  title "Pruning docker containers & volumes"
+  title "Pruning docker containers & volumes for v${VERDACCIO_VERSION}"
   example
-  docker-compose rm -v --stop --force >/dev/null 2>&1
+  docker-compose -f $COMPOSE_FILE rm -v --stop --force >/dev/null 2>&1
   docker volume rm example_minio >/dev/null 2>&1
 }
 
 start() {
-  title "Starting containers"
+  title "Starting containers for v${VERDACCIO_VERSION}"
   {
     example
-    docker-compose up -d --build
+    docker-compose -f $COMPOSE_FILE up -d --build
     sleep 1s
     isContainerRunning $MINIO_SERVICE
     isContainerRunning $VERDACCIO_SERVICE
   } || {
-    panic "Failed to start the containers"
+    panic "Failed to start the containers for v${VERDACCIO_VERSION}"
   }
 }

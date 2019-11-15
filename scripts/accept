@@ -12,22 +12,31 @@ isMinioValid() {
     [[ "$(mc ls example/verdaccio)" =~ 'db.json' ]] || error "Verdaccio database does not exists, meaning a problem happened during plugin initialization"
 
     if mc ls example/verdaccio | grep -q 'async'; then
-      panic "Verdaccio bucket already contains packages, meaning cleanup didn't happend correctly"
+      panic "Verdaccio bucket already contains packages, meaning cleanup didn't happend correctly for v${VERDACCIO_VERSION}"
     fi
   } || {
-    panic "Failed to validate minio state"
+    panic "Failed to validate minio state for v${VERDACCIO_VERSION}"
   }
 }
 
 isYarnAbleToInstall() {
-  title "Try installing dependencies using verdaccio as a proxy"
+  title "Try installing dependencies using verdaccio v${VERDACCIO_VERSION} as a proxy"
   {
     rm -rf ./node_modules
     yarn cache clean
     yarn install --har --verbose --registry=$VERDACCIO_ENDPOINT >"$DIR/../example/out.yarn.log"
   } || {
-    panic "Failed to install dependencies through verdaccio"
+    panic "Failed to install dependencies through verdaccio v${VERDACCIO_VERSION}"
   }
+}
+
+accept() {
+  setVersion $1
+  title "Running acceptance for v${VERDACCIO_VERSION}"
+  start
+  isMinioValid
+  isYarnAbleToInstall
+  cleanup
 }
 
 # Build plugin
@@ -39,17 +48,16 @@ copy
 # Remove old containers to start from scratch
 prune
 
-# Build & Start the containers
-start
-
-# Check if minio is ok
-isMinioValid
-
-# Check if install through verdaccio is ok
-isYarnAbleToInstall
-
-# Stop all containers & remove volumes, but save logs to ./example
-cleanup
+if [ -z "$1" ]; then
+  # Run acceptance tests for all supported versions of Verdaccio
+  accept "4.3"
+  accept "4.2"
+  accept "4.1"
+  accept "4.0"
+else
+  # Run acceptance tests for the given version
+  accept "$1"
+fi
 
 # Go back to project root directory
 root
