@@ -1,4 +1,5 @@
-FROM verdaccio/verdaccio:4.3.4
+ARG VERDACCIO_TAG=4.3
+FROM verdaccio/verdaccio:$VERDACCIO_TAG
 
 # Install minio plugin
 USER root
