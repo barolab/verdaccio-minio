@@ -1,4 +1,4 @@
-import { getNotFound, getInternalError, VerdaccioError } from '@verdaccio/commons-api';
+import { API_ERROR, getInternalError } from '@verdaccio/commons-api';
 
 interface MinioError extends Error {
   code?: string;
@@ -6,6 +6,30 @@ interface MinioError extends Error {
   resource?: string;
 }
 
+/**
+ * Custom Error class implementing the required fields for Verdaccio to determine
+ * what kind of error this is. The status code is the HTTP equivalent of the error,
+ * and the code is the FS equivalent error code.
+ */
+class CustomError extends Error {
+  public code: string;
+  public status: number;
+  public statusCode: number;
+
+  public constructor(message: string, code: string, status: number) {
+    super(message);
+    this.code = code;
+    this.status = status;
+    this.statusCode = status;
+  }
+}
+
+export const NOT_FOUND = new CustomError(API_ERROR.NO_PACKAGE, 'ENOENT', 404);
+export const INTERNAL = new CustomError(API_ERROR.UNKNOWN_ERROR, 'UNKNOWN', 500);
+
+/**
+ * Common error constants from Minio
+ */
 export const MINIO = {
   NO_SUCH_KEY: 'NoSuchKey',
   NOT_FOUND: 'NotFound',
@@ -32,7 +56,7 @@ export function isNotFound(error: MinioError): boolean {
  *
  * @param error
  */
-export function wrap(error: MinioError): VerdaccioError {
+export function wrap(error: MinioError): CustomError {
   if (!hasCode(error)) {
     return getInternalError(error.message);
   }
@@ -40,8 +64,8 @@ export function wrap(error: MinioError): VerdaccioError {
   switch (error.code) {
     case MINIO.NO_SUCH_KEY:
     case MINIO.NOT_FOUND:
-      return getNotFound(error.message);
+      return NOT_FOUND;
     default:
-      return getInternalError(error.message);
+      return INTERNAL;
   }
 }

@@ -1,6 +1,6 @@
 import { getConflict } from '@verdaccio/commons-api';
 import { pkg, stat, stream, logger, NotFound, Unknown } from '../tests/mocks';
-import { wrap } from './errors';
+import { wrap, NOT_FOUND, INTERNAL } from './errors';
 import Storage from './storage';
 import Client from './client';
 
@@ -36,7 +36,7 @@ describe('storage', () => {
 
         const st = new Storage(client, logger, 'test');
         await st.readPackage('test', (err, res) => {
-          expect(err).toEqual(NotFound);
+          expect(err).toEqual(NOT_FOUND);
           expect(res).toBeUndefined();
         });
       });
@@ -71,7 +71,7 @@ describe('storage', () => {
 
         const st = new Storage(client, logger, 'test');
         await st.createPackage('test', pkg, err => {
-          expect(err).toEqual(Unknown);
+          expect(err).toEqual(INTERNAL);
           expect(client.put).not.toHaveBeenCalled();
         });
       });
@@ -83,7 +83,7 @@ describe('storage', () => {
 
         const st = new Storage(client, logger, 'test');
         await st.createPackage('test', pkg, err => {
-          expect(err).toEqual(Unknown);
+          expect(err).toEqual(INTERNAL);
         });
       });
     });
@@ -105,7 +105,7 @@ describe('storage', () => {
 
         const st = new Storage(client, logger, 'test');
         await st.deletePackage('test', err => {
-          expect(err).toEqual(NotFound);
+          expect(err).toEqual(NOT_FOUND);
         });
       });
     });
@@ -127,7 +127,7 @@ describe('storage', () => {
 
         const st = new Storage(client, logger, 'test');
         await st.removePackage(err => {
-          expect(err).toEqual(NotFound);
+          expect(err).toEqual(NOT_FOUND);
         });
       });
     });
@@ -167,7 +167,7 @@ describe('storage', () => {
 
         const st = new Storage(client, logger, 'test');
         await st.updatePackage('test', update, write, transform, err => {
-          expect(err.message).toEqual('Unknown error');
+          expect(err.message).toEqual(INTERNAL.message);
           expect(transform).not.toHaveBeenCalled();
           expect(update).toHaveBeenCalled();
           expect(write).not.toHaveBeenCalled();
@@ -188,7 +188,7 @@ describe('storage', () => {
 
         const st = new Storage(client, logger, 'test');
         await st.updatePackage('test', update, write, transform, err => {
-          expect(err.message).toEqual('Object not found');
+          expect(err.message).toEqual(NOT_FOUND.message);
           expect(transform).not.toHaveBeenCalled();
           expect(update).not.toHaveBeenCalled();
           expect(write).not.toHaveBeenCalled();
@@ -302,7 +302,7 @@ describe('storage', () => {
       });
 
       tbs.on('error', error => {
-        expect(error).toEqual(Unknown);
+        expect(error).toEqual(INTERNAL);
         done();
       });
     });
@@ -317,7 +317,7 @@ describe('storage', () => {
       const tbs = st.readTarball('test.tar.gz');
 
       tbs.on('error', error => {
-        expect(error).toEqual(Unknown);
+        expect(error).toEqual(INTERNAL);
         done();
       });
     });
