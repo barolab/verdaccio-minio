@@ -23,7 +23,9 @@ export default class Storage implements ILocalPackageManager {
     const key = `${this.name}/${name}`;
     const tbs = new WriteStream(this.logger, key, {});
     this.debug({ key }, 'Writing tarball at @{key}');
+    tbs.pause();
     this.client.exist(key).then(exist => {
+      tbs.resume();
       if (exist) {
         return tbs.emit('error', getConflict());
       }

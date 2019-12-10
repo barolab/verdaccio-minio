@@ -14,12 +14,10 @@ const FILE_NAME = 'db.json';
 export default class Database {
   private client: Client;
   private logger: Logger;
-  private cached: LocalStorage | null;
 
   public constructor(client: Client, logger: Logger) {
     this.client = client;
     this.logger = logger;
-    this.cached = null;
   }
 
   /**
@@ -130,17 +128,12 @@ export default class Database {
   }
 
   /**
-   * Custom function for loading database. If cached then we only return the cached
-   * version, otherwise we load the database from the remote storage
+   * Custom function for loading database
    */
   private async load(): Promise<LocalStorage> {
-    if (this.cached) {
-      return this.cached as LocalStorage;
-    }
-
     let db: LocalStorage;
     try {
-      this.debug({ name: FILE_NAME }, 'Loading database @{name} from cache');
+      this.debug({ name: FILE_NAME }, 'Loading database @{name}');
       const str = await this.client.get(FILE_NAME);
 
       this.debug({ str }, 'Got database from remote, @{str}');
@@ -159,16 +152,15 @@ export default class Database {
   }
 
   /**
-   * Save the given database to the remote storage, and cache the result in memory if succeed
+   * Save the given database to the remote storage
    *
    * @param db
    */
   private async save(db: LocalStorage): Promise<void> {
     try {
-      this.debug({}, 'Saving cached database to storage');
+      this.debug({}, 'Saving database to storage');
       const res = await this.client.put(FILE_NAME, JSON.stringify(db));
       this.debug({ res }, 'Database stored successfully, @{res}');
-      this.cached = db;
     } catch (error) {
       this.debug({ error }, 'Failed to store database to remote storage, @{error}');
       throw new Error(`Failed to store database to remote storage, ${error}`);
