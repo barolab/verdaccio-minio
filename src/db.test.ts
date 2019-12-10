@@ -42,6 +42,18 @@ describe('db', () => {
       expect(client.get).toHaveBeenLastCalledWith('db.json');
     });
 
+    it('should load an uninitialized database when is empty', async () => {
+      expect.assertions(3);
+      client.get.mockResolvedValue('');
+
+      const db = new Database(client, logger);
+      const secret = await db.getSecret();
+
+      expect(secret).toEqual('');
+      expect(client.get).toHaveBeenCalledTimes(1);
+      expect(client.get).toHaveBeenLastCalledWith('db.json');
+    });
+
     it('should throw an error when a failure happened during the loading of the database', async () => {
       expect.assertions(3);
       client.get.mockRejectedValue(Unknown);
@@ -58,20 +70,21 @@ describe('db', () => {
       }
     });
 
-    it('should load the cache when it exists', async () => {
-      expect.assertions(4);
-      client.get.mockRejectedValue(NotFound);
+    it('should load setted secret', async () => {
+      expect.assertions(1);
+      let currentDB: any = JSON.stringify({ secret: 'secret', list: [] });
+      client.get.mockImplementation((name) => {
+        return Promise.resolve(currentDB);
+      });
+      client.put.mockImplementation((name, db: any) => {
+        currentDB = db;
+        return Promise.resolve(db);
+      });
 
       const db = new Database(client, logger);
-      await db.setSecret('secret');
+      await db.setSecret('mysecret');
       const a = await db.getSecret();
-      const b = await db.getSecret();
-      const c = await db.getSecret();
-      expect(a).toEqual('secret');
-      expect(b).toEqual('secret');
-      expect(c).toEqual('secret');
-      // Only get one during the setSecret, calls to getSecret nether fetches with the client
-      expect(client.get).toHaveBeenCalledTimes(1);
+      expect(a).toEqual('mysecret');
     });
 
     it('should throw an error when saving fails', async () => {
@@ -149,8 +162,14 @@ describe('db', () => {
   describe('add', () => {
     it('add a package to the list', async () => {
       expect.assertions(2);
-      client.get.mockResolvedValue(JSON.stringify({ secret: 'secret', list }));
-      client.put.mockResolvedValue('etag');
+      let currentDB: any = JSON.stringify({ secret: 'secret', list });
+      client.get.mockImplementation((name) => {
+        return Promise.resolve(currentDB);
+      });
+      client.put.mockImplementation((name, db: any) => {
+        currentDB = db;
+        return Promise.resolve(db);
+      });
 
       const db = new Database(client, logger);
       await db.add('test');
@@ -208,8 +227,15 @@ describe('db', () => {
   describe('remove', () => {
     it('remove a package to the list', async () => {
       expect.assertions(2);
-      client.get.mockResolvedValue(JSON.stringify({ secret: 'secret', list: [...list, 'test'] }));
-      client.put.mockResolvedValue('etag');
+      let currentDB: any = JSON.stringify({ secret: 'secret', list: [...list, 'test'] });
+      client.get.mockImplementation((name) => {
+        return Promise.resolve(currentDB);
+      });
+      client.put.mockImplementation((name, db: any) => {
+        currentDB = db;
+        return Promise.resolve(db);
+      });
+
 
       const db = new Database(client, logger);
       await db.remove('test');
