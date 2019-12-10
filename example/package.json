@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This serve as an example project using Verdaccio with Minio as it's registry",
   "license": "SEE LICENSE IN LICENSE",
   "main": "index.js",
@@ -9,6 +9,9 @@
     "S3",
     "Minio",
     "Example"
+  ],
+  "files": [
+    "index.js"
   ],
   "author": {
     "name": "Romain Bailly",
