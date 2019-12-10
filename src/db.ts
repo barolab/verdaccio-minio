@@ -128,7 +128,7 @@ export default class Database {
   }
 
   /**
-   * Custom function for loading database. 
+   * Custom function for loading database
    */
   private async load(): Promise<LocalStorage> {
     let db: LocalStorage;

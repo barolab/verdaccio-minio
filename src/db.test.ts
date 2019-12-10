@@ -1,4 +1,7 @@
+import { Stream } from 'stream';
+
 import { logger, NotFound, Unknown } from '../tests/mocks';
+
 import Database from './db';
 import Client from './client';
 
@@ -72,13 +75,13 @@ describe('db', () => {
 
     it('should load setted secret', async () => {
       expect.assertions(1);
-      let currentDB: any = JSON.stringify({ secret: 'secret', list: [] });
-      client.get.mockImplementation((name) => {
+      let currentDB: string = JSON.stringify({ secret: 'secret', list: [] });
+      client.get.mockImplementation(() => {
         return Promise.resolve(currentDB);
       });
-      client.put.mockImplementation((name, db: any) => {
-        currentDB = db;
-        return Promise.resolve(db);
+      client.put.mockImplementation((name, data: string | Buffer | Stream) => {
+        currentDB = data.toString();
+        return Promise.resolve(currentDB);
       });
 
       const db = new Database(client, logger);
@@ -162,13 +165,13 @@ describe('db', () => {
   describe('add', () => {
     it('add a package to the list', async () => {
       expect.assertions(2);
-      let currentDB: any = JSON.stringify({ secret: 'secret', list });
-      client.get.mockImplementation((name) => {
+      let currentDB: string = JSON.stringify({ secret: 'secret', list });
+      client.get.mockImplementation(() => {
         return Promise.resolve(currentDB);
       });
-      client.put.mockImplementation((name, db: any) => {
-        currentDB = db;
-        return Promise.resolve(db);
+      client.put.mockImplementation((name, data: string | Buffer | Stream) => {
+        currentDB = data.toString();
+        return Promise.resolve(currentDB);
       });
 
       const db = new Database(client, logger);
@@ -227,15 +230,14 @@ describe('db', () => {
   describe('remove', () => {
     it('remove a package to the list', async () => {
       expect.assertions(2);
-      let currentDB: any = JSON.stringify({ secret: 'secret', list: [...list, 'test'] });
-      client.get.mockImplementation((name) => {
+      let currentDB: string = JSON.stringify({ secret: 'secret', list: [...list, 'test'] });
+      client.get.mockImplementation(() => {
         return Promise.resolve(currentDB);
       });
-      client.put.mockImplementation((name, db: any) => {
-        currentDB = db;
-        return Promise.resolve(db);
+      client.put.mockImplementation((name, data: string | Buffer | Stream) => {
+        currentDB = data.toString();
+        return Promise.resolve(currentDB);
       });
-
 
       const db = new Database(client, logger);
       await db.remove('test');
