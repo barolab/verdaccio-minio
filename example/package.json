@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "This serve as an example project using Verdaccio with Minio as it's registry",
   "license": "SEE LICENSE IN LICENSE",
+  "main": "index.js",
   "keywords": [
     "Verdaccio",
     "S3",
-    "Minio"
+    "Minio",
+    "Example"
   ],
   "author": {
     "name": "Romain Bailly",

@@ -24,9 +24,20 @@ isYarnAbleToInstall() {
   {
     rm -rf ./node_modules
     yarn cache clean
-    yarn install --har --verbose --registry=$VERDACCIO_ENDPOINT >"$DIR/../example/out.yarn.log"
+    yarn install --har --verbose --registry=$VERDACCIO_ENDPOINT >"$DIR/../example/install.yarn.log"
   } || {
     panic "Failed to install dependencies through verdaccio v${VERDACCIO_VERSION}"
+  }
+}
+
+isYarnAbleToPublish() {
+  title "Try publishing package using verdaccio v${VERDACCIO_VERSION}"
+  {
+    yarn login --registry $VERDACCIO_ENDPOINT
+    yarn publish --new-version 1.0.0 --registry $VERDACCIO_ENDPOINT
+    [[ $(mc cp example/verdaccio/example/example-1.0.0.tgz .) =~ "Total: 0 B" ]] && panic "Published package is 0 Bytes"
+  } || {
+    panic "Failed to publish package on verdaccio v${VERDACCIO_VERSION}"
   }
 }
 
@@ -36,6 +47,7 @@ accept() {
   start
   isMinioValid
   isYarnAbleToInstall
+  isYarnAbleToPublish
   cleanup
 }
 
