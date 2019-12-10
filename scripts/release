@@ -54,6 +54,14 @@ image() {
   }
 }
 
+release() {
+  pull
+  build
+  bump
+  push
+  image
+}
+
 while [ "$1" != "" ]; do
   case $1 in
   --major)
@@ -69,8 +77,11 @@ while [ "$1" != "" ]; do
   shift
 done
 
-pull
-build
-bump
-push
-image
+while true; do
+    read -p "You're about to create a new ${MODE} version, did you updated the CHANGELOG ? (y/n)" yn
+    case $yn in
+        [Yy]* ) release; break;;
+        [Nn]* ) echo "Yep, you forgot it..."; exit;;
+        * ) echo "Please answer yes (y) or no (n).";;
+    esac
+done
