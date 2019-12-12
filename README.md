@@ -7,7 +7,7 @@
 [![Build Status](https://travis-ci.com/barolab/verdaccio-minio.svg?branch=master)](https://travis-ci.com/barolab/verdaccio-minio)
 ![npm](https://img.shields.io/npm/v/verdaccio-minio)
 
-A verdaccio plugin for storing data in [Minio](https://min.io/).
+A [verdaccio](https://verdaccio.org) plugin for storing data in [Minio](https://min.io/).
 
 ## Usage
 
