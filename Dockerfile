@@ -1,4 +1,4 @@
-FROM verdaccio/verdaccio:4.3.4
+FROM verdaccio/verdaccio:4
 USER root
 ENV NODE_ENV=production
 RUN yarn global add verdaccio-minio && \
