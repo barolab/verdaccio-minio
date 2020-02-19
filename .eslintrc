@@ -1,3 +1,6 @@
 {
-  "extends": ["@verdaccio"]
+  "extends": ["@verdaccio"],
+  "rules": {
+    "import/order": 0
+  }
 }

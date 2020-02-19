@@ -46,29 +46,29 @@
     "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\""
   },
   "dependencies": {
-    "@verdaccio/commons-api": "^8.3.0",
-    "@verdaccio/streams": "^8.3.0",
+    "@verdaccio/commons-api": "^9.0.0",
+    "@verdaccio/streams": "^9.3.0",
     "get-stream": "^5.1.0",
-    "minio": "^7.0.12"
+    "minio": "^7.0.13"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.0",
-    "@babel/core": "^7.7.0",
-    "@babel/plugin-proposal-class-properties": "^7.7.0",
-    "@babel/preset-env": "^7.7.1",
-    "@babel/preset-typescript": "^7.7.2",
-    "@types/jest": "^24.0.23",
-    "@types/minio": "^7.0.3",
-    "@types/node": "^12.12.0",
-    "@verdaccio/babel-preset": "^8.0.0",
-    "@verdaccio/eslint-config": "^8.0.0",
-    "@verdaccio/types": "^8.0.0",
-    "coveralls": "^3.0.7",
-    "eslint": "^6.6.0",
-    "jest": "^24.9.0",
+    "@babel/cli": "^7.8.0",
+    "@babel/core": "^7.8.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.0",
+    "@babel/preset-env": "^7.8.0",
+    "@babel/preset-typescript": "^7.8.0",
+    "@types/jest": "^25.1.0",
+    "@types/minio": "^7.0.5",
+    "@types/node": "^13.7.0",
+    "@verdaccio/babel-preset": "^9.0.0",
+    "@verdaccio/eslint-config": "^9.0.0",
+    "@verdaccio/types": "^9.0.0",
+    "coveralls": "^3.0.9",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
     "prettier": "^1.19.0",
-    "ts-jest": "^24.1.0",
-    "typescript": "3.5.3"
+    "ts-jest": "^25.2.0",
+    "typescript": "^3.6.0"
   },
   "jest": {
     "roots": [
