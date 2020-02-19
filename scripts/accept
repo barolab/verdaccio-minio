@@ -34,7 +34,7 @@ isYarnAbleToPublish() {
   title "Try publishing package using verdaccio v${VERDACCIO_VERSION}"
 
   yarn login --registry $VERDACCIO_ENDPOINT
-  yarn publish --new-version 1.0.0 --registry $VERDACCIO_ENDPOINT --non-interactive
+  yarn publish --new-version 1.0.0 --registry $VERDACCIO_ENDPOINT
   if [ $? -ne 0 ]; then
     panic "Publish command exited with code $?"
   fi
