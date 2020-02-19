@@ -1,4 +1,4 @@
-ARG VERDACCIO_TAG=4.3
+ARG VERDACCIO_TAG=4.4
 FROM verdaccio/verdaccio:$VERDACCIO_TAG
 
 # Install minio plugin
