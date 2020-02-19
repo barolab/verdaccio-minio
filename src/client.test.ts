@@ -104,7 +104,7 @@ describe('client', () => {
         await c.initialize();
       } catch (error) {
         expect(error.message).toEqual(`Failed to ensure bucket ${config.bucket} exist: ${e.message}`);
-        expect(mock.bucketExists).toHaveBeenCalledTimes(1);
+        expect(mock.bucketExists).toHaveBeenCalledTimes(4);
         expect(mock.bucketExists).toHaveBeenLastCalledWith(config.bucket);
         expect(mock.makeBucket).not.toHaveBeenCalled();
       }
@@ -124,9 +124,9 @@ describe('client', () => {
         await c.initialize();
       } catch (error) {
         expect(error.message).toEqual(`Failed to ensure bucket ${config.bucket} exist: ${e.message}`);
-        expect(mock.bucketExists).toHaveBeenCalledTimes(1);
+        expect(mock.bucketExists).toHaveBeenCalledTimes(4);
         expect(mock.bucketExists).toHaveBeenLastCalledWith(config.bucket);
-        expect(mock.makeBucket).toHaveBeenCalledTimes(1);
+        expect(mock.makeBucket).toHaveBeenCalledTimes(4);
         expect(mock.makeBucket).toHaveBeenLastCalledWith(config.bucket, config.region);
       }
     });

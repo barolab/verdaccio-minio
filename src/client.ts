@@ -4,6 +4,7 @@ import { Logger } from '@verdaccio/types';
 import { Client as MinioClient } from 'minio';
 import { ClientConfig } from './config';
 import { PackageStat } from './stat';
+import retry from './async';
 
 const DEFAULT_BUCKET = 'verdaccio';
 const DEFAULT_REGION = 'us-east-1';
@@ -51,19 +52,27 @@ export default class Client {
    * Initialize the client by making sure the bucket exist in minio.
    */
   public async initialize(): Promise<void> {
-    try {
-      const exist = await this.client.bucketExists(this.bucket);
-      if (!exist) {
-        this.debug({}, 'Bucket @{bucket} does not exist, creating it');
-        await this.client.makeBucket(this.bucket, this.region);
-        this.debug({}, 'Bucket @{bucket} creating successfully');
-      } else {
-        this.debug({}, 'Bucket @{bucket} already exist, keep going');
+    const r = retry({
+      log: msg => this.logger.debug({}, `[Minio] ${msg}`),
+      delay: 500, // 0.5 sec
+      retries: 3,
+    });
+
+    return r(async () => {
+      try {
+        const exist = await this.client.bucketExists(this.bucket);
+        if (!exist) {
+          this.debug({}, 'Bucket @{bucket} does not exist, creating it');
+          await this.client.makeBucket(this.bucket, this.region);
+          this.debug({}, 'Bucket @{bucket} creating successfully');
+        } else {
+          this.debug({}, 'Bucket @{bucket} already exist, keep going');
+        }
+      } catch (error) {
+        this.debug({ error }, 'Failed to ensure bucket @{bucket} exist, @{error}');
+        throw new Error(`Failed to ensure bucket ${this.bucket} exist: ${error.message}`);
       }
-    } catch (error) {
-      this.debug({ error }, 'Failed to ensure bucket @{bucket} exist, @{error}');
-      throw new Error(`Failed to ensure bucket ${this.bucket} exist: ${error.message}`);
-    }
+    });
   }
 
   public async get(name: string): Promise<string> {
