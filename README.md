@@ -90,7 +90,7 @@ services:
       VERDACCIO_PORT: 4873
 
   minio:
-    image: minio/minio:RELEASE.2019-08-21T19-40-07Z
+    image: minio/minio:RELEASE.2020-02-07T23-28-16Z
     command: server /data
     volumes:
       - minio:/data
