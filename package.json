@@ -53,22 +53,22 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.8.0",
-    "@babel/core": "^7.8.0",
+    "@babel/core": "^7.8.7",
     "@babel/plugin-proposal-class-properties": "^7.8.0",
-    "@babel/preset-env": "^7.8.0",
+    "@babel/preset-env": "^7.8.7",
     "@babel/preset-typescript": "^7.8.0",
-    "@types/jest": "^25.1.0",
+    "@types/jest": "^25.1.4",
     "@types/minio": "^7.0.5",
     "@types/node": "^13.7.0",
-    "@verdaccio/babel-preset": "^9.0.0",
-    "@verdaccio/eslint-config": "^9.0.0",
+    "@verdaccio/babel-preset": "^9.3.0",
+    "@verdaccio/eslint-config": "^9.3.0",
     "@verdaccio/types": "^9.0.0",
     "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
     "jest": "^25.1.0",
     "prettier": "^1.19.0",
     "ts-jest": "^25.2.0",
-    "typescript": "^3.6.0"
+    "typescript": "^3.8.0"
   },
   "jest": {
     "roots": [
