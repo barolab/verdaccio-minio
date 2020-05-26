@@ -29,7 +29,7 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
 
   public constructor(config: Config, options: PluginOptions<PluginConfig>) {
     this.retry = retry({
-      log: msg => options.logger.debug({}, `[Minio] ${msg}`),
+      log: (msg) => options.logger.debug({}, `[Minio] ${msg}`),
       delay: config.delay || 500, // 0.5 sec
       retries: config.retries || 10,
     });
@@ -40,34 +40,34 @@ export default class MinioDatabase implements IPluginStorage<PluginConfig> {
     this.tokens = new Tokens(this.client, this.logger);
     this.db = new Database(this.client, this.logger);
 
-    this.client.initialize().catch(error => {
+    this.client.initialize().catch((error) => {
       this.logger.error({ error }, 'There was an error initializing client: @{error}');
     });
   }
 
   public search(onPackage: Callback, onEnd: Callback, validate: (name: string) => boolean): void {
     this.retry(() => this.db.search(validate))
-      .then(results => Promise.all(results.map(r => this.stat(r, onPackage))))
+      .then((results) => Promise.all(results.map((r) => this.stat(r, onPackage))))
       .then(() => onEnd(null))
-      .catch(error => onEnd(error));
+      .catch((error) => onEnd(error));
   }
 
   public get(callback: Function): void {
     this.retry(() => this.db.get())
-      .then(packages => callback(null, packages))
-      .catch(error => callback(error, []));
+      .then((packages) => callback(null, packages))
+      .catch((error) => callback(error, []));
   }
 
   public add(name: string, callback: Function): void {
     this.retry(() => this.db.add(name))
       .then(() => callback(null))
-      .catch(error => callback(error));
+      .catch((error) => callback(error));
   }
 
   public remove(name: string, callback: Function): void {
     this.retry(() => this.db.remove(name))
       .then(() => callback(null))
-      .catch(error => callback(error));
+      .catch((error) => callback(error));
   }
 
   public getSecret(): Promise<string> {

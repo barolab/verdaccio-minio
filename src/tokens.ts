@@ -20,9 +20,9 @@ export default class Tokens {
 
   public async get(filter: TokenFilter): Promise<Token[]> {
     const state = await this.load();
-    const keys = Object.keys(state.tokens).filter(k => k.indexOf(filter.user) !== -1);
+    const keys = Object.keys(state.tokens).filter((k) => k.indexOf(filter.user) !== -1);
 
-    return keys.map(k => state.tokens[k]);
+    return keys.map((k) => state.tokens[k]);
   }
 
   public async add(token: Token): Promise<void> {

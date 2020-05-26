@@ -48,7 +48,7 @@ describe('storage', () => {
         client.get.mockResolvedValue(JSON.stringify(pkg));
 
         const st = new Storage(client, logger, 'test');
-        await st.createPackage('test', pkg, err => {
+        await st.createPackage('test', pkg, (err) => {
           expect(err).toEqual(getConflict('EEXISTS'));
         });
       });
@@ -59,7 +59,7 @@ describe('storage', () => {
         client.put.mockResolvedValue('etag');
 
         const st = new Storage(client, logger, 'test');
-        await st.createPackage('test', pkg, err => {
+        await st.createPackage('test', pkg, (err) => {
           expect(err).toBeNull();
         });
       });
@@ -70,7 +70,7 @@ describe('storage', () => {
         client.put.mockRejectedValue(Unknown);
 
         const st = new Storage(client, logger, 'test');
-        await st.createPackage('test', pkg, err => {
+        await st.createPackage('test', pkg, (err) => {
           expect(err).toEqual(INTERNAL);
           expect(client.put).not.toHaveBeenCalled();
         });
@@ -82,7 +82,7 @@ describe('storage', () => {
         client.put.mockRejectedValue(Unknown);
 
         const st = new Storage(client, logger, 'test');
-        await st.createPackage('test', pkg, err => {
+        await st.createPackage('test', pkg, (err) => {
           expect(err).toEqual(INTERNAL);
         });
       });
@@ -94,7 +94,7 @@ describe('storage', () => {
         client.remove.mockResolvedValue();
 
         const st = new Storage(client, logger, 'test');
-        await st.deletePackage('test', err => {
+        await st.deletePackage('test', (err) => {
           expect(err).toBeNull();
         });
       });
@@ -104,7 +104,7 @@ describe('storage', () => {
         client.remove.mockRejectedValue(NotFound);
 
         const st = new Storage(client, logger, 'test');
-        await st.deletePackage('test', err => {
+        await st.deletePackage('test', (err) => {
           expect(err).toEqual(NOT_FOUND);
         });
       });
@@ -116,7 +116,7 @@ describe('storage', () => {
         client.remove.mockResolvedValue();
 
         const st = new Storage(client, logger, 'test');
-        await st.removePackage(err => {
+        await st.removePackage((err) => {
           expect(err).toBeNull();
         });
       });
@@ -126,7 +126,7 @@ describe('storage', () => {
         client.remove.mockRejectedValue(NotFound);
 
         const st = new Storage(client, logger, 'test');
-        await st.removePackage(err => {
+        await st.removePackage((err) => {
           expect(err).toEqual(NOT_FOUND);
         });
       });
@@ -146,7 +146,7 @@ describe('storage', () => {
         write.mockImplementation((name, state, cb) => cb(null, name, state));
 
         const st = new Storage(client, logger, 'test');
-        await st.updatePackage('test', update, write, transform, err => {
+        await st.updatePackage('test', update, write, transform, (err) => {
           expect(err).toBeNull();
           expect(transform).toHaveBeenCalled();
           expect(update).toHaveBeenCalled();
@@ -166,7 +166,7 @@ describe('storage', () => {
         write.mockImplementation((name, state, cb) => cb(null, name, state));
 
         const st = new Storage(client, logger, 'test');
-        await st.updatePackage('test', update, write, transform, err => {
+        await st.updatePackage('test', update, write, transform, (err) => {
           expect(err.message).toEqual(INTERNAL.message);
           expect(transform).not.toHaveBeenCalled();
           expect(update).toHaveBeenCalled();
@@ -187,7 +187,7 @@ describe('storage', () => {
         write.mockImplementation((name, state, cb) => cb(null, name, state));
 
         const st = new Storage(client, logger, 'test');
-        await st.updatePackage('test', update, write, transform, err => {
+        await st.updatePackage('test', update, write, transform, (err) => {
           expect(err.message).toEqual(NOT_FOUND.message);
           expect(transform).not.toHaveBeenCalled();
           expect(update).not.toHaveBeenCalled();
@@ -198,7 +198,7 @@ describe('storage', () => {
   });
 
   describe('tarballs', () => {
-    it('should write tarball to storage using streams', done => {
+    it('should write tarball to storage using streams', (done) => {
       expect.assertions(1);
       client.exist.mockResolvedValue(false);
       client.put.mockResolvedValue('etag');
@@ -214,12 +214,12 @@ describe('storage', () => {
         expect(client.exist).toHaveBeenCalledWith('test/test.tar.gz');
       });
 
-      tbs.on('error', error => {
+      tbs.on('error', (error) => {
         done.fail(`Unexpected error has been emitted in write stream: ${error}`);
       });
     });
 
-    it('should emit an error when package exists', done => {
+    it('should emit an error when package exists', (done) => {
       expect.assertions(1);
       client.exist.mockResolvedValue(true);
 
@@ -230,13 +230,13 @@ describe('storage', () => {
         done.fail('Received success while an error is expected');
       });
 
-      tbs.on('error', error => {
+      tbs.on('error', (error) => {
         expect(error).toEqual(getConflict());
         done();
       });
     });
 
-    it('should emit an error when uploading fails', done => {
+    it('should emit an error when uploading fails', (done) => {
       expect.assertions(2);
       client.exist.mockResolvedValue(false);
       client.put.mockRejectedValue(Unknown);
@@ -252,13 +252,13 @@ describe('storage', () => {
         expect(client.exist).toHaveBeenCalledWith('test/test.tar.gz');
       });
 
-      tbs.on('error', error => {
+      tbs.on('error', (error) => {
         expect(error).toEqual(wrap(Unknown));
         done();
       });
     });
 
-    it('should be able to read package in a stream', done => {
+    it('should be able to read package in a stream', (done) => {
       expect.assertions(3);
       const s = stream('test');
       client.getStream.mockResolvedValue(s);
@@ -267,7 +267,7 @@ describe('storage', () => {
       const st = new Storage(client, logger, 'test');
       const tbs = st.readTarball('test.tar.gz');
 
-      tbs.on('content-length', size => {
+      tbs.on('content-length', (size) => {
         expect(size).toEqual(stat.size);
       });
 
@@ -277,12 +277,12 @@ describe('storage', () => {
         done();
       });
 
-      tbs.on('error', error => {
+      tbs.on('error', (error) => {
         done.fail(`Unexpected error has been emitted in write stream: ${error}`);
       });
     });
 
-    it('should emit all the errors that happens with the storage stream', done => {
+    it('should emit all the errors that happens with the storage stream', (done) => {
       expect.assertions(4);
       const s = stream('test');
       client.getStream.mockResolvedValue(s);
@@ -291,7 +291,7 @@ describe('storage', () => {
       const st = new Storage(client, logger, 'test');
       const tbs = st.readTarball('test.tar.gz');
 
-      tbs.on('content-length', size => {
+      tbs.on('content-length', (size) => {
         expect(size).toEqual(stat.size);
       });
 
@@ -301,13 +301,13 @@ describe('storage', () => {
         s.emit('error', Unknown);
       });
 
-      tbs.on('error', error => {
+      tbs.on('error', (error) => {
         expect(error).toEqual(INTERNAL);
         done();
       });
     });
 
-    it('should emit error when storage return a failure', done => {
+    it('should emit error when storage return a failure', (done) => {
       expect.assertions(1);
       const s = stream('test');
       client.getStream.mockResolvedValue(s);
@@ -316,7 +316,7 @@ describe('storage', () => {
       const st = new Storage(client, logger, 'test');
       const tbs = st.readTarball('test.tar.gz');
 
-      tbs.on('error', error => {
+      tbs.on('error', (error) => {
         expect(error).toEqual(INTERNAL);
         done();
       });
