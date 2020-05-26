@@ -113,7 +113,7 @@ describe('plugin', () => {
       MockedDatabase.add.mockResolvedValue(null);
 
       const plugin = new Plugin(cfg, options);
-      plugin.add('test', err => {
+      plugin.add('test', (err) => {
         expect(err).toBeNull();
         expect(MockedDatabase.add).toHaveBeenCalled();
       });
@@ -123,7 +123,7 @@ describe('plugin', () => {
       MockedDatabase.add.mockRejectedValue(Unknown);
 
       const plugin = new Plugin(cfg, options);
-      plugin.add('test', err => {
+      plugin.add('test', (err) => {
         expect(err).toEqual(Unknown);
         expect(MockedDatabase.add).toHaveBeenCalled();
       });
@@ -133,7 +133,7 @@ describe('plugin', () => {
       MockedDatabase.remove.mockResolvedValue(null);
 
       const plugin = new Plugin(cfg, options);
-      plugin.remove('test', err => {
+      plugin.remove('test', (err) => {
         expect(err).toBeNull();
         expect(MockedDatabase.remove).toHaveBeenCalled();
       });
@@ -143,7 +143,7 @@ describe('plugin', () => {
       MockedDatabase.remove.mockRejectedValue(Unknown);
 
       const plugin = new Plugin(cfg, options);
-      plugin.remove('test', err => {
+      plugin.remove('test', (err) => {
         expect(err).toEqual(Unknown);
         expect(MockedDatabase.remove).toHaveBeenCalled();
       });

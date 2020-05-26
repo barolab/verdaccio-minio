@@ -24,7 +24,7 @@ export default class Storage implements ILocalPackageManager {
     const tbs = new WriteStream(this.logger, key, {});
     this.debug({ key }, 'Writing tarball at @{key}');
     tbs.pause();
-    this.client.exist(key).then(exist => {
+    this.client.exist(key).then((exist) => {
       tbs.resume();
       if (exist) {
         return tbs.emit('error', getConflict());
@@ -40,11 +40,11 @@ export default class Storage implements ILocalPackageManager {
   public uploadTarball(key: string, stream: WriteStream): void {
     this.client
       .put(key, stream)
-      .then(etag => {
+      .then((etag) => {
         this.debug({ key, etag }, 'Tarball at @{key} as been uploaded successfully');
         stream.emit('success');
       })
-      .catch(error => {
+      .catch((error) => {
         this.debug({ key, error }, 'Received error when writing tarball at @{key}: @{error}');
         stream.emit('error', wrap(error));
       });
@@ -58,11 +58,11 @@ export default class Storage implements ILocalPackageManager {
       .then(([stream, stat]) => {
         this.debug({ key }, 'Opening stream for reading tarball at @{key}');
         stream.pipe(tbs);
-        stream.on('error', error => tbs.emit('error', wrap(error)));
+        stream.on('error', (error) => tbs.emit('error', wrap(error)));
         tbs.emit('content-length', stat.size);
         tbs.emit('open');
       })
-      .catch(error => {
+      .catch((error) => {
         this.debug({ key, error }, 'Received error when reading tarball at @{key}: @{error}');
         tbs.emit('error', wrap(error));
       });
@@ -153,7 +153,7 @@ export default class Storage implements ILocalPackageManager {
     try {
       const data = await this.client.get(key);
       const pkg = JSON.parse(data);
-      update(pkg, error => {
+      update(pkg, (error) => {
         if (error) {
           this.debug({ key, error }, 'Failed to apply update on package @{name} at @{key}, @{error}');
           return cb(wrap(error));

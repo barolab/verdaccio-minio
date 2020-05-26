@@ -6,9 +6,9 @@ const debug = (stream: Stream, logger: Logger, name: string): void => {
   stream.on('end', () => logger.debug({ name }, '[Minio] @{name} is ending'));
   stream.on('open', () => logger.debug({ name }, '[Minio] @{name} is opened'));
   stream.on('close', () => logger.debug({ name }, '[Minio] @{name} is closing'));
-  stream.on('error', error => logger.debug({ name, error }, '[Minio] @{name} error: @{error}'));
+  stream.on('error', (error) => logger.debug({ name, error }, '[Minio] @{name} error: @{error}'));
   stream.on('finish', () => logger.debug({ name }, '[Minio] @{name} is finishing'));
-  stream.on('data', chunk => logger.debug({ name, size: chunk.length }, '[Minio] @{name} received @{size} bytes'));
+  stream.on('data', (chunk) => logger.debug({ name, size: chunk.length }, '[Minio] @{name} received @{size} bytes'));
 };
 
 export class WriteStream extends UploadTarball {

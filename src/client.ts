@@ -53,7 +53,7 @@ export default class Client {
    */
   public async initialize(): Promise<void> {
     const r = retry({
-      log: msg => this.logger.debug({}, `[Minio] ${msg}`),
+      log: (msg) => this.logger.debug({}, `[Minio] ${msg}`),
       delay: 500, // 0.5 sec
       retries: 3,
     });

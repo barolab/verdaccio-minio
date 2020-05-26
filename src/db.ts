@@ -119,7 +119,7 @@ export default class Database {
         return;
       }
 
-      const next = { ...state, list: state.list.filter(p => p !== name) };
+      const next = { ...state, list: state.list.filter((p) => p !== name) };
       await this.save(next);
       this.debug({ name }, 'Package @{name} successfully removed');
     } catch (error) {
