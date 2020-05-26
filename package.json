@@ -46,10 +46,10 @@
     "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\""
   },
   "dependencies": {
-    "@verdaccio/commons-api": "^9.0.0",
-    "@verdaccio/streams": "^9.3.0",
+    "@verdaccio/commons-api": "^9.4.0",
+    "@verdaccio/streams": "^9.5.0",
     "get-stream": "^5.1.0",
-    "minio": "^7.0.13"
+    "minio": "^7.0.16"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.0",

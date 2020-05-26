@@ -1811,10 +1811,10 @@
     babel-plugin-dynamic-import-node "2.3.0"
     babel-plugin-emotion "10.0.29"
 
-"@verdaccio/commons-api@^9.0.0":
-  version "9.3.2"
-  resolved "https://registry.yarnpkg.com/@verdaccio/commons-api/-/commons-api-9.3.2.tgz#7ce1e2c694fb6ca4f5a7cbc2b4445f3019d7e950"
-  integrity sha512-qbzyTRZtbURr6p50Gdo4axFrVBJ57HXymiU79Oh6OwmPNWpPJxhau+FURzVJySSIhCoDyOfFKI/KirTEt+V8Pw==
+"@verdaccio/commons-api@^9.4.0":
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/@verdaccio/commons-api/-/commons-api-9.4.0.tgz#74bb922d5d173a1c19cd2719db9f028e8909dac7"
+  integrity sha512-h5DvalAx+fKbCPp9azybvZsvQARBtCeUoMc8jAstUIcOJwbJ0hzMxpM9yY+1cwJvVC7lqTxCZEduWbamfLOQdQ==
   dependencies:
     http-errors "1.7.3"
     http-status-codes "1.4.0"
@@ -1835,10 +1835,10 @@
     eslint-plugin-prettier "3.1.2"
     tsutils "3.17.1"
 
-"@verdaccio/streams@^9.3.0":
-  version "9.3.2"
-  resolved "https://registry.yarnpkg.com/@verdaccio/streams/-/streams-9.3.2.tgz#6bddbd70c1fc72fa2b85c74bd7545d58d66a589e"
-  integrity sha512-+DtUE/t/o4WDDtUVudjHqxcypvqnfwoHEy5x1KndFUhSbmdHsWjLOmy+Fu1FXzWPncODRebyZZro2LDiMxoaqg==
+"@verdaccio/streams@^9.5.0":
+  version "9.5.0"
+  resolved "https://registry.yarnpkg.com/@verdaccio/streams/-/streams-9.5.0.tgz#01c1e1a654b2085b0711a3e23df5c7b7376d0282"
+  integrity sha512-Z+04XRPbOJCsaY6GyrVJH6/IWqeh81U3kr9E5XBHkCK+NtybF0D0nnZgVTh/q2GOxhvvOgGv9r3Uvg4GkbnXsQ==
 
 "@verdaccio/types@^9.5.0":
   version "9.5.0"
@@ -4644,10 +4644,10 @@ minimist@^1.1.1, minimist@^1.2.0, minimist@^1.2.5:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
-minio@^7.0.13:
-  version "7.0.15"
-  resolved "https://registry.yarnpkg.com/minio/-/minio-7.0.15.tgz#1fa2b22c2def6cedc0afaa236d60e0d36509f99a"
-  integrity sha512-ucZnLNUQgQV+/S8FfyO40yM/X8gVcw8WRcoGH5WWk4xQwKAp4K/xjooHwkV0Oc3Iu/6WZDnGQ+Nf4I4XIzl9eA==
+minio@^7.0.16:
+  version "7.0.16"
+  resolved "https://registry.yarnpkg.com/minio/-/minio-7.0.16.tgz#1bbf334bdfe35214a9c199768f94f11b86b04063"
+  integrity sha512-OgCJ3XVMzukSqoMFBiBDeyz30BxYTBM9yRLVRBCExTb+QKVxJh4DnUOS2/zw7OPeDyXXEvYSzDvg4FkCf1Cxyw==
   dependencies:
     async "^3.1.0"
     block-stream2 "^2.0.0"
