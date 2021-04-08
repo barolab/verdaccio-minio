@@ -21,7 +21,7 @@
     "url": "https://github.com/barolab/verdaccio-minio/issues"
   },
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "types": "lib/src/index.d.ts",
   "files": [
     "lib/"
   ],
