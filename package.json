@@ -43,16 +43,19 @@
     "fmt": "prettier -- --write ./src/**/*.{js,ts,json}",
     "build": "yarn build:types && yarn build:js",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\""
+    "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\"",
+    "prepare": "yarn run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "dependencies": {
     "@verdaccio/commons-api": "^9.4.0",
     "@verdaccio/streams": "^9.5.0",
     "get-stream": "^5.1.0",
-    "minio": "^7.0.16"
+    "minio": "^7.0.16",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.0",
+    "@babel/cli": "^7.12.0",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.0",
     "@babel/preset-env": "^7.9.0",
@@ -64,7 +67,7 @@
     "@verdaccio/eslint-config": "^9.3.0",
     "@verdaccio/types": "^9.5.0",
     "coveralls": "^3.1.0",
-    "eslint": "^7.1.0",
+    "eslint": "^7.16.0",
     "jest": "^26.0.0",
     "prettier": "^2.0.5",
     "ts-jest": "^26.0.0",
@@ -87,5 +90,6 @@
       "html",
       "clover"
     ]
-  }
+  },
+  "snyk": true
 }
