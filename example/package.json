@@ -18,6 +18,6 @@
     "email": "rbailly17000@gmail.com"
   },
   "dependencies": {
-    "minio": "^7.0.12"
+    "minio": "^7.0.17"
   }
 }
