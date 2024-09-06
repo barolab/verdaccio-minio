@@ -49,25 +49,25 @@
     "@verdaccio/commons-api": "^9.4.0",
     "@verdaccio/streams": "^9.5.0",
     "get-stream": "^5.1.0",
-    "minio": "^7.0.16"
+    "minio": "^7.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.0",
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.23.2",
     "@babel/plugin-proposal-class-properties": "^7.8.0",
-    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-env": "^7.22.6",
     "@babel/preset-typescript": "^7.9.0",
-    "@types/jest": "^25.2.0",
+    "@types/jest": "^27.4.1",
     "@types/minio": "^7.0.5",
     "@types/node": "^14.0.0",
-    "@verdaccio/babel-preset": "^9.4.0",
+    "@verdaccio/babel-preset": "^9.6.1",
     "@verdaccio/eslint-config": "^9.3.0",
     "@verdaccio/types": "^9.5.0",
     "coveralls": "^3.1.0",
-    "eslint": "^7.1.0",
-    "jest": "^26.0.0",
+    "eslint": "^8.46.0",
+    "jest": "^29.7.0",
     "prettier": "^2.0.5",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^29.1.1",
     "typescript": "^3.9.0"
   },
   "jest": {
